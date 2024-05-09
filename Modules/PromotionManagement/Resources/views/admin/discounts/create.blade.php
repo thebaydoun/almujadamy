@@ -138,6 +138,18 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-lg-4" id="order_no">
+                                            <div class="mb-30">
+                                                <div class="form-floating form-floating__icon">
+                                                    <input type="number" class="form-control" step="any"
+                                                           name="order_no"
+                                                           placeholder="{{translate('after_no_of_orders')}}  *"
+                                                           min="0.01" value="0">
+                                                    <label>{{translate('after_no_of_orders')}}  *</label>
+                                                    <span class="material-icons">price_change</span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-end">
