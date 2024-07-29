@@ -18,7 +18,7 @@ class AdminModulePermission
      */
     public function handle(Request $request, Closure $next, $module): mixed
     {
-        if ($request->user()->user_type == 'super-admin') {
+        if ($request->user()->user_type == 'super-admin' || $request->user()->user_type == 'provider-admin') {
             return $next($request);
         } elseif ($request->user()->roles->count() > 0) {
 

@@ -5,7 +5,7 @@ const PROVIDER_PANEL_ACCESS = "AccessToProvider";
 const CUSTOMER_PANEL_ACCESS = "AccessToCustomer";
 const SERVICEMAN_APP_ACCESS = "AccessToServicemanApp";
 
-const ADMIN_USER_TYPES = ['super-admin', 'admin-employee'];
+const ADMIN_USER_TYPES = ['super-admin', 'admin-employee','provider-admin'];
 const PROVIDER_USER_TYPES = ['provider-admin', 'provider-employee', 'provider-serviceman'];
 const CUSTOMER_USER_TYPES = ['customer'];
 const SERVICEMAN_USER_TYPES = PROVIDER_USER_TYPES[2];

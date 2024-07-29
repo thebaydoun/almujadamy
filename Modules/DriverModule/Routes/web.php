@@ -26,3 +26,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin', '
         Route::any('download', 'DriverController@download')->name('download');
     });
 });
+
+Route::group(['prefix' => 'provider', 'as' => 'provider.', 'middleware' => ['provider']], function () {
+    Route::group(['prefix' => 'driver', 'as' => 'driver.'], function () {
+        Route::any('list', 'ProviderDriverController@index')->name('index');
+        Route::any('create', 'ProviderDriverController@create')->name('create');
+        Route::post('store', 'ProviderDriverController@store')->name('store');
+        Route::get('edit/{id}', 'ProviderDriverController@edit')->name('edit');
+        Route::put('update/{id}', 'ProviderDriverController@update')->name('update');
+        Route::any('status-update/{id}', 'ProviderDriverController@statusUpdate')->name('status-update');
+        Route::delete('delete/{id}', 'ProviderDriverController@destroy')->name('delete');
+        Route::any('download', 'ProviderDriverController@download')->name('download');
+    });
+});

@@ -156,16 +156,61 @@ $logo = business_config('business_logo', 'business_information');
                 </ul>
             </li>
 
-            <li class="nav-category">{{translate('Help & support')}}</li>
+            <li class="nav-category" title="{{translate('service_management')}}">
+                {{translate('service_management')}}
+            </li>
+            <li class="has-sub-item {{(request()->is('provider/category/*')  ||  request()->is('provider/sub-category/*'))?'sub-menu-opened':''}}">
+                <a href="#"
+                   class="{{(request()->is('provider/category/*') || request()->is('provider/sub-category/*'))?'active-menu':''}}">
+                    <span class="material-icons" title="Service Categories">category</span>
+                    <span class="link-title">{{translate('Categories')}}</span>
+                </a>
+                <ul class="nav sub-menu">
+                    <li>
+                        <a href="{{route('provider.category.create')}}"
+                           class="{{request()->is('provider/category/*')?'active-menu':''}}">
+                            {{translate('Category Setup')}}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{route('provider.sub-category.create')}}"
+                           class="{{request()->is('provider/sub-category/*')?'active-menu':''}}">
+                            {{translate('Sub Category Setup')}}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="has-sub-item {{request()->is('provider/service/*') || request()->is('provider/vendor/*') ?'sub-menu-opened':''}}">
+                <a href="#" class="{{request()->is('provider/service/*')?'active-menu':''}}">
+                    <span class="material-icons" title="Services">design_services</span>
+                    <span class="link-title">{{translate('services')}}</span>
+                </a>
+                <ul class="nav flex-column sub-menu">
+                    <li>
+                        <a href="{{route('provider.services.index')}}"
+                           class="{{request()->is('provider/service/list')?'active-menu':''}}">
+                            {{translate('service_list')}}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{route('provider.vendor.create')}}"
+                           class="{{request()->is('provider/vendor/create')?'active-menu':''}}">
+                            {{translate('Vendors')}}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            {{-- <li class="nav-category">{{translate('Help & support')}}</li>
             <li>
                 <a href="{{route('provider.chat.index')}}"
                    class="{{request()->is('provider/chat/index*') ?'active-menu':''}}">
                     <span class="material-icons" title="{{translate('chatting')}}">message</span>
                     <span class="link-title">{{translate('Chatting')}}</span>
                 </a>
-            </li>
+            </li> --}}
 
-            <li class="nav-category"
+            {{-- <li class="nav-category"
                 title="{{translate('Service_Management')}}">{{translate('Service_Management')}}</li>
             <li>
                 <a href="{{route('provider.service.available')}}"
@@ -188,12 +233,22 @@ $logo = business_config('business_logo', 'business_information');
                     <span class="material-icons" title="{{translate('Request for Service')}}">list</span>
                     <span class="link-title">{{translate('Service Requests')}}</span>
                 </a>
-            </li>
+            </li> --}}
 
-            <li class="nav-category"
-                title="{{translate('User_Management')}}">{{translate('User Management')}}</li>
+            {{-- <li class="nav-category"
+                title="{{translate('User_Management')}}">{{translate('User Management')}}</li> --}}
 
-            <li class="has-sub-item {{request()->is('provider/serviceman/*')?'sub-menu-opened':''}}">
+                <li class="nav-category"
+                    title="{{translate('driver_management')}}">{{translate('driver_management')}}</li>
+
+                <li>
+                    <a href="{{route('provider.driver.index')}}"
+                       class="{{request()->is('provider/driver/list') ||  request()->is('provider/driver/edit/*') ? 'active-menu':''}}">
+                        <span class="material-icons" title="{{translate('driver_list')}}">list</span>
+                        <span class="link-title">{{translate('driver_list')}}</span>
+                    </a>
+                </li>
+            {{-- <li class="has-sub-item {{request()->is('provider/serviceman/*')?'sub-menu-opened':''}}">
                 <a href="#" class="{{request()->is('provider/serviceman/*')?'active-menu':''}}">
                     <span class="material-icons" title="{{translate('Service_Man')}}">man</span>
                     <span class="link-title">{{translate('Service_Man')}}</span>
@@ -212,9 +267,9 @@ $logo = business_config('business_logo', 'business_information');
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
 
-            <li class="nav-category" title="{{translate('account')}}">{{translate('account_management')}}</li>
+            {{-- <li class="nav-category" title="{{translate('account')}}">{{translate('account_management')}}</li>
             <li>
                 <a href="{{route('provider.account_info', ['page_type'=>'overview'])}}"
                    class="{{request()->is('provider/account-info*') || request()->is('provider/withdraw') ?'active-menu':''}}">
@@ -228,9 +283,9 @@ $logo = business_config('business_logo', 'business_information');
                     <span class="material-icons" title="{{translate('bank_information')}}">account_balance</span>
                     <span class="link-title">{{translate('bank_information')}}</span>
                 </a>
-            </li>
+            </li> --}}
 
-            <li class="nav-category" title="{{translate('Reports & Analytics')}}">
+            {{-- <li class="nav-category" title="{{translate('Reports & Analytics')}}">
                 {{translate('Reports & Analytics')}}
             </li>
             <li class="has-sub-item {{request()->is('provider/report/*')?'sub-menu-opened':''}}">
@@ -268,7 +323,7 @@ $logo = business_config('business_logo', 'business_information');
                     <span class="material-icons" title="Business Settings">business_center</span>
                     <span class="link-title">{{translate('business_settings')}}</span>
                 </a>
-            </li>
+            </li> --}}
 
 
         </ul>

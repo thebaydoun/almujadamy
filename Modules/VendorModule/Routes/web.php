@@ -27,3 +27,20 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin','m
         Route::get('download', 'VendorController@download')->name('download');
     });
 });
+
+Route::group(['prefix' => 'provider', 'as' => 'provider.', 'middleware' => ['provider']], function () {
+
+    Route::group(['prefix' => 'vendor', 'as' => 'vendor.'], function () {
+        Route::any('create', 'ProviderVendorController@create')->name('create');
+        Route::post('store', 'ProviderVendorController@store')->name('store');
+        Route::get('edit/{id}', 'ProviderVendorController@edit')->name('edit');
+        Route::put('update/{id}', 'ProviderVendorController@update')->name('update');
+        Route::any('status-update/{id}', 'ProviderVendorController@statusUpdate')->name('status-update');
+        Route::any('featured-update/{id}', 'ProviderVendorController@featuredUpdate')->name('featured-update');
+        Route::delete('delete/{id}', 'ProviderVendorController@destroy')->name('delete');
+        Route::get('childes', 'ProviderVendorController@childes');
+        Route::get('ajax-childes/{id}', 'ProviderVendorController@ajaxChildes')->name('ajax-childes');
+        Route::get('ajax-childes-only/{id}', 'ProviderVendorController@ajaxChildesOnly')->name('ajax-childes-only');
+        Route::get('download', 'ProviderVendorController@download')->name('download');
+    });
+});

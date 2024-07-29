@@ -22,5 +22,6 @@
     "Gateways": true,
     "DriverModule": true,
     "ProviderModule": true,
-    "VendorModule": true
+    "VendorModule": true,
+    "ProductModule": true
 }

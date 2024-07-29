@@ -3652,4 +3652,13 @@ _Message' => 'Customer notification for provider bid offer
   'Vendor Phone' => 'Vendor Phone',
   'vendor image' => 'Vendor image',
   'after_no_of_orders' => 'After no. of orders',
+  'Products' => 'Products',
+  'Product List' => 'Product List',
+  'Add Product' => 'Add Product',
+  'Total Products' => 'Total Products',
+  'Product Name' => 'Product Name',
+  'Product Add' => 'Product Add',
+  'Add New Product' => 'Add New Product',
+  'General Information' => 'General Information',
+  'Product Image' => 'Product Image',
 );

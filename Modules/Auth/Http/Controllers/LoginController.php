@@ -61,7 +61,7 @@ class LoginController extends Controller
             ->ofType(ADMIN_USER_TYPES)->first();
 
         if (isset($user) && Hash::check($request['password'], $user['password'])) {
-            if ($user->is_active && $user->roles->count() > 0 && $user->roles[0]->is_active || $user->user_type == 'super-admin') {
+            if ($user->is_active || $user->user_type == 'super-admin' || $user->user_type == 'provider-admin' || $user->user_type == 'admin-employee') {
                 if (auth()->attempt(['email' => $request->email_or_phone, 'password' => $request->password])) {
                     return redirect()->route('admin.dashboard');
                 }

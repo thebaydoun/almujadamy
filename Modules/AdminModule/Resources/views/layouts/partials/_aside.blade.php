@@ -83,7 +83,7 @@ $logo = business_config('business_logo', 'business_information');
                 </a>
             </li>
 
-            @if(access_checker('booking_management'))
+            @if(access_checker('booking_management') || auth()->user()->user_type == 'provider-admin')
                 <li class="nav-category" title="{{translate('booking_management')}}">
                     {{translate('booking_management')}}
                 </li>
@@ -119,7 +119,7 @@ $logo = business_config('business_logo', 'business_information');
 
             
 
-            @if(access_checker('service_management'))
+            @if(access_checker('service_management') || auth()->user()->user_type == 'provider-admin')
                 <li class="nav-category" title="{{translate('service_management')}}">
                     {{translate('service_management')}}
                 </li>
@@ -143,6 +143,13 @@ $logo = business_config('business_logo', 'business_information');
                             </a>
                         </li>
                     </ul>
+                </li>
+                <li>
+                    <a href="{{route('admin.product.index')}}"
+                       class="{{request()->is('admin/product/list') ||  request()->is('admin/product/edit/*') ? 'active-menu':''}}">
+                        <span class="material-icons" title="{{translate('Products')}}">list</span>
+                        <span class="link-title">{{translate('Products')}}</span>
+                    </a>
                 </li>
                 <li class="has-sub-item {{request()->is('admin/service/*') || request()->is('admin/vendor/*') ?'sub-menu-opened':''}}">
                     <a href="#" class="{{request()->is('admin/service/*')?'active-menu':''}}">
@@ -231,7 +238,7 @@ $logo = business_config('business_logo', 'business_information');
             @endif
             
 
-            @if(access_checker('employee_management'))
+            @if(access_checker('employee_management') || auth()->user()->user_type == 'provider-admin')
                 <li class="nav-category"
                     title="{{translate('driver_management')}}">{{translate('driver_management')}}</li>
 
@@ -244,7 +251,7 @@ $logo = business_config('business_logo', 'business_information');
                 </li>
             @endif
 
-            @if(access_checker('transaction_management'))
+            @if(access_checker('transaction_management') || auth()->user()->user_type == 'provider-admin')
                 <li class="nav-category" title="{{translate('transaction_management')}}">
                     {{translate('transaction_management')}}
                 </li>

@@ -168,6 +168,8 @@ class ProviderController extends Controller
         $owner->identification_number = $request->identity_number;
         $owner->identification_type = $request->identity_type ?? "";
         $owner->is_active = 1;
+        $owner->is_email_verified = 1;
+        $owner->is_phone_verified = 1;
         $owner->identification_image = $identityImages;
         $owner->password = bcrypt($request->password);
         $owner->user_type = 'provider-admin';
