@@ -95,8 +95,9 @@
                                             <tr>
                                                 <th>{{translate('Sl')}}</th>
                                                 <th>{{translate('Driver Name')}}</th>
+                                                <th>{{translate('boat_name')}}</th> 
+                                                <th>{{translate('boat_number')}}</th> 
                                                 <th class="text-center">{{translate('Contact_Info')}}</th>
-                                                {{-- <th class="text-center">{{translate('Role')}}</th> --}}
                                                 <th class="text-center">{{translate('status')}}</th>
                                                 <th class="text-center">{{translate('action')}}</th>
                                             </tr>
@@ -243,6 +244,8 @@
                                                             </div>
                                                         </div>
                                                     </td>
+                                                    <td>{{$employee->boat_name}}</td> <!-- Boat Name Column -->
+                                                    <td>{{$employee->boat_number}}</td> <!-- Boat Number Column -->
                                                     <td>
                                                         <div class="d-flex flex-column align-items-center gap-1">
                                                             <a href="mailto:{{$employee->email}}"
@@ -251,12 +254,6 @@
                                                                class="fz-12 fw-medium">{{$employee->phone}}</a>
                                                         </div>
                                                     </td>
-
-                                                    {{-- <td class="text-center"
-                                                        data-bs-target="#exampleModal--{{$employee['id']}}"
-                                                        data-bs-toggle="modal">
-                                                        {{implode(',',$employee->roles->pluck('role_name')->toArray())}}
-                                                    </td> --}}
 
                                                     <td>
                                                         <label class="switcher mx-auto" data-bs-toggle="modal"

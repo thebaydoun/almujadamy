@@ -44,7 +44,7 @@ class User extends Authenticatable
     protected $fillable = [
         'uuid', 'first_name', 'last_name', 'email', 'phone', 'identification_number', 'identification_type', 'identification_image', 'date_of_birth', 'gender',
         'profile_image', 'fcm_token', 'is_phone_verified', 'is_email_verified', 'phone_verified_at', 'email_verified_at', 'password', 'is_active', 'provider_id', 'user_type',
-        'wallet_balance', 'loyalty_point', 'ref_code', 'referred_by'
+        'wallet_balance', 'loyalty_point', 'ref_code', 'referred_by', 'boat_name', 'boat_number'
     ];
 
     public function roles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany

@@ -45,7 +45,7 @@
                     <div class="col-lg-3 col-sm-6">
                         <div class="business-summary business-summary-services">
                             <h2>{{$data[0]['top_cards']['total_provider']}}</h2>
-                            <h3>{{translate('providers')}}</h3>
+                            <h3>{{translate('Drivers')}}</h3>
                             <img src="{{asset('public/assets/admin-module')}}/img/icons/services.png"
                                  class="absolute-img"
                                  alt="">

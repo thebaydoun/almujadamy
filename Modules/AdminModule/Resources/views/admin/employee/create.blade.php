@@ -51,6 +51,7 @@
                                                    value="{{old('phone')}}" required>
                                         </div>
                                     </div>
+                                    
 
                                     <div class="col-md-6 d-none">
                                         <div class="form-floating form-floating__icon mb-30">

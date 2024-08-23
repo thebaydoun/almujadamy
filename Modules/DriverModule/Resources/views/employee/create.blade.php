@@ -43,6 +43,22 @@
                                             <span class="material-icons">account_circle</span>
                                         </div>
                                     </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating form-floating__icon mb-30">
+                                            <input type="text" class="form-control" name="boat_name" placeholder="{{translate('Boat Name')}}" value="{{old('boat_name')}}" required>
+                                            <label>{{translate('boat_name')}}</label>
+                                            <span class="material-icons">directions_boat</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="form-floating form-floating__icon mb-30">
+                                            <input type="text" class="form-control" name="boat_number" placeholder="{{translate('Boat Number')}}" value="{{old('boat_number')}}" required>
+                                            <label>{{translate('boat_number')}}</label>
+                                            <span class="material-icons">confirmation_number</span>
+                                        </div>
+                                    </div>
+                                    
                                     <div class="col-md-12">
                                         <div class="form-floating mb-30">
                                             <label for="phone">{{translate('Phone_number')}}</label>

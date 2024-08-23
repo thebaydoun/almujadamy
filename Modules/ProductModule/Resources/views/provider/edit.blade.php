@@ -1,4 +1,4 @@
-@extends('adminmodule::layouts.master')
+@extends('providermanagement::layouts.master')
 
 @section('title', translate('Product Edit'))
 
@@ -12,23 +12,23 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-wrap mb-3">
-                        <h2 class="page-title">{{translate('edit_product')}}</h2>
+                        <h2 class="page-title">{{translate('Edit Product')}}</h2>
                     </div>
 
                     <div class="card">
                         <div class="card-body">
-                            <form action="{{route('admin.product.update', [$product->id])}}" method="post" enctype="multipart/form-data">
+                            <form action="{{route('provider.product.update', [$product->id])}}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
 
                                 <div class="row">
-                                    <h4 class="c1 mb-20">{{translate('general_information')}}</h4>
+                                    <h4 class="c1 mb-20">{{translate('General Information')}}</h4>
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating__icon mb-30">
                                             <input type="text" class="form-control" name="name"
-                                                   placeholder="{{translate('product_name')}}"
+                                                   placeholder="{{translate('Product Name')}}"
                                                    value="{{$product->name}}" required>
-                                            <label>{{translate('product_name')}}</label>
+                                            <label>{{translate('Product Name')}}</label>
                                             <span class="material-icons">account_circle</span>
                                         </div>
                                     </div>
@@ -50,15 +50,6 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating__icon mb-30">
-                                            <input type="number" class="form-control" name="cost"
-                                                   placeholder="{{translate('cost')}}"
-                                                   value="{{$product->cost}}" required>
-                                            <label>{{translate('cost')}}</label>
-                                            <span class="material-icons">attach_money</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-floating form-floating__icon mb-30">
                                             <input type="number" class="form-control" name="quantity"
                                                    placeholder="{{translate('Quantity')}}"
                                                    value="{{$product->quantity}}" required>
@@ -74,7 +65,7 @@
                                                 <div class="upload-file">
                                                     <input type="file" class="upload-file__input" name="image" accept="image/*">
                                                     <div class="upload-file__img">
-                                                        <img class="onerror-image" src="{{asset('storage/products/'.$product->image)}}" alt="{{translate('product_image')}}">
+                                                        <img class="onerror-image" src="{{asset('storage/products/'.$product->image)}}" alt="{{translate('Product Image')}}">
                                                     </div>
                                                 </div>
                                             </div>

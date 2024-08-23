@@ -1,4 +1,4 @@
-@extends('adminmodule::layouts.master')
+@extends('providermanagement::layouts.master')
 
 @section('title', translate('Product List'))
 
@@ -13,11 +13,11 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-wrap d-flex justify-content-between flex-wrap align-items-center gap-3 mb-3">
-                        <h2 class="page-title">{{translate('products_list')}}</h2>
+                        <h2 class="page-title">{{translate('Product List')}}</h2>
                         <div>
-                            <a href="{{route('admin.product.create')}}" class="btn btn--primary">
+                            <a href="{{route('provider.product.create')}}" class="btn btn--primary">
                                 <span class="material-icons">add</span>
-                                {{translate('add_product')}}
+                                {{translate('Add Product')}}
                             </a>
                         </div>
                     </div>
@@ -42,7 +42,7 @@
                         </ul>
 
                         <div class="d-flex gap-2 fw-medium">
-                            <span class="opacity-75">{{translate('total_products')}}:</span>
+                            <span class="opacity-75">{{translate('Total Products')}}:</span>
                             <span class="title-color">{{$products->total()}}</span>
                         </div>
                     </div>
@@ -71,7 +71,7 @@
                                                     <span class="material-icons">file_download</span> download
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                                                    <a class="dropdown-item" href="{{route('admin.product.download')}}?search={{$search}}">
+                                                    <a class="dropdown-item" href="{{route('provider.product.download')}}?search={{$search}}">
                                                         {{translate('excel')}}
                                                     </a>
                                                 </ul>
@@ -83,10 +83,9 @@
                                         <table id="example" class="table align-middle">
                                             <thead>
                                             <tr>
-                                                <th>{{translate('sl')}}</th>
-                                                <th>{{translate('product_name')}}</th>
+                                                <th>{{translate('Sl')}}</th>
+                                                <th>{{translate('Product Name')}}</th>
                                                 <th class="text-center">{{translate('Price')}}</th>
-                                                <th class="text-center">{{translate('cost')}}</th> <!-- New Cost Column Header -->
                                                 <th class="text-center">{{translate('Quantity')}}</th>
                                                 <th class="text-center">{{translate('Status')}}</th>
                                                 <th class="text-center">{{translate('Action')}}</th>
@@ -102,7 +101,6 @@
                                                         <span>{{$product->name}}</span>
                                                     </td>
                                                     <td class="text-center">{{$product->price}}</td>
-                                                    <td class="text-center">{{$product->cost}}</td> <!-- Display Cost Here -->
                                                     <td class="text-center">{{$product->quantity}}</td>
                                                     <td>
                                                         <label class="switcher mx-auto" data-bs-toggle="modal"
@@ -115,7 +113,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="d-flex gap-2 justify-content-center">
-                                                            <a href="{{route('admin.product.edit', [$product->id])}}"
+                                                            <a href="{{route('provider.product.edit', [$product->id])}}"
                                                                class="action-btn btn--light-primary"
                                                                style="--size: 30px">
                                                                 <span class="material-icons">edit</span>
@@ -125,7 +123,7 @@
                                                                 <span class="material-symbols-outlined">delete</span>
                                                             </button>
                                                         </div>
-                                                        <form action="{{route('admin.product.delete', [$product->id])}}" method="post" id="delete-{{$product->id}}" class="hidden">
+                                                        <form action="{{route('provider.product.delete', [$product->id])}}" method="post" id="delete-{{$product->id}}" class="hidden">
                                                             @csrf
                                                             @method('DELETE')
                                                         </form>
@@ -133,7 +131,7 @@
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="7"><p class="text-center">{{translate('no_data_available')}}</p></td>
+                                                    <td colspan="6"><p class="text-center">{{translate('no_data_available')}}</p></td>
                                                 </tr>
                                             @endforelse
                                             </tbody>
@@ -161,7 +159,7 @@
 
         $('.switcher_input').on('click', function () {
             let itemId = $(this).data('status');
-            let route = '{{ route('admin.product.status-update', ['id' => ':itemId']) }}';
+            let route = '{{ route('provider.product.status-update', ['id' => ':itemId']) }}';
             route = route.replace(':itemId', itemId);
             route_alert(route, '{{ translate('want_to_update_status') }}');
         });

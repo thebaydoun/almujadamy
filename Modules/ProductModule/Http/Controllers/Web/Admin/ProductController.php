@@ -11,7 +11,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 use Modules\ProductModule\Entities\Product;
 use Modules\BusinessSettingsModule\Entities\Translation;
 use Rap2hpoutre\FastExcel\FastExcel;
@@ -26,11 +25,6 @@ class ProductController extends Controller
         $this->product = $product;
     }
 
-    /**
-     * Display a listing of the resource.
-     * @param Request $request
-     * @return Application|Factory|View
-     */
     public function index(Request $request): View|Factory|Application
     {
         $search = $request->has('search') ? $request['search'] : '';
@@ -40,8 +34,10 @@ class ProductController extends Controller
         $products = $this->product
             ->when($request->has('search'), function ($query) use ($request) {
                 $keys = explode(' ', $request['search']);
-                foreach ($keys as $key) {
-                    $query->orWhere('name', 'LIKE', '%' . $key . '%');
+                if (is_array($keys)) {
+                    foreach ($keys as $key) {
+                        $query->orWhere('name', 'LIKE', '%' . $key . '%');
+                    }
                 }
             })
             ->when($status != 'all', function ($query) use ($status) {
@@ -52,79 +48,59 @@ class ProductController extends Controller
         return view('productmodule::admin.list', compact('products', 'search', 'status'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Application|Factory|View
-     */
     public function create(): View|Factory|Application
     {
         return view('productmodule::admin.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return RedirectResponse
-     */
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => 'required|unique:products',
+            'name.default' => 'required|unique:products,name',
             'image' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:10240',
             'price' => 'required|numeric',
+            'cost' => 'required|numeric',  // Validate the cost field
             'quantity' => 'required|integer',
         ]);
 
-        $product = new Product();
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->price = $request->price;
-        $product->quantity = $request->quantity;
+        DB::transaction(function () use ($request) {
+            $product = new Product();
+            $product->name = $request->name['default'];
+            $product->description = $request->description['default'];
+            $product->price = $request->price;
+            $product->cost = $request->cost;  // Store the cost field
+            $product->quantity = $request->quantity;
 
-        if ($request->hasFile('image')) {
-            $product->image = $request->file('image')->store('products', 'public');
-        }
+            if ($request->hasFile('image')) {
+                $product->image = $request->file('image')->store('products', 'public');
+            }
 
-        $product->save();
+            $product->save();
 
-        $defaultLanguage = str_replace('_', '-', app()->getLocale());
-        $data = [];
-        foreach ($request->lang as $index => $key) {
-            if ($defaultLanguage == $key && !($request->name[$index])) {
-                if ($key != 'default') {
-                    $data[] = array(
-                        'translationable_type' => 'Modules\ProductModule\Entities\Product',
-                        'translationable_id' => $product->id,
-                        'locale' => $key,
-                        'key' => 'name',
-                        'value' => $product->name,
-                    );
-                }
-            } else {
-                if ($request->name[$index] && $key != 'default') {
-                    $data[] = array(
-                        'translationable_type' => 'Modules\ProductModule\Entities\Product',
-                        'translationable_id' => $product->id,
-                        'locale' => $key,
-                        'key' => 'name',
-                        'value' => $request->name[$index],
-                    );
+            $defaultLanguage = str_replace('_', '-', app()->getLocale());
+            $data = [];
+            if (is_array($request->name)) {
+                foreach ($request->name as $lang => $value) {
+                    if ($lang != 'default') {
+                        $data[] = array(
+                            'translationable_type' => Product::class,
+                            'translationable_id' => $product->id,
+                            'locale' => $lang,
+                            'key' => 'name',
+                            'value' => $value,
+                        );
+                    }
                 }
             }
-        }
-        if (count($data)) {
-            Translation::insert($data);
-        }
+            if (count($data)) {
+                Translation::insert($data);
+            }
+        });
 
         Toastr::success('Product created successfully');
-        return back();
+        return redirect()->route('admin.product.index');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param string $id
-     * @return View|Factory|Application|RedirectResponse
-     */
     public function edit(string $id): View|Factory|Application|RedirectResponse
     {
         $product = $this->product->find($id);
@@ -135,25 +111,21 @@ class ProductController extends Controller
         return view('productmodule::admin.edit', compact('product'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param string $id
-     * @return JsonResponse|RedirectResponse
-     */
     public function update(Request $request, string $id): JsonResponse|RedirectResponse
     {
         $request->validate([
-            'name' => 'required|unique:products,name,' . $id,
+            'name.default' => 'required|unique:products,name,' . $id,
             'image' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:10240',
             'price' => 'required|numeric',
+            'cost' => 'required|numeric',  // Validate the cost field
             'quantity' => 'required|integer',
         ]);
 
         $product = Product::findOrFail($id);
-        $product->name = $request->name;
-        $product->description = $request->description;
+        $product->name = $request->name['default'];
+        $product->description = $request->description['default'];
         $product->price = $request->price;
+        $product->cost = $request->cost;  // Update the cost field
         $product->quantity = $request->quantity;
 
         if ($request->hasFile('image')) {
@@ -163,42 +135,27 @@ class ProductController extends Controller
         $product->save();
 
         $defaultLanguage = str_replace('_', '-', app()->getLocale());
-        foreach ($request->lang as $index => $key) {
-            if ($defaultLanguage == $key && !($request->name[$index])) {
-                if ($key != 'default') {
+        $data = [];
+        if (is_array($request->name)) {
+            foreach ($request->name as $lang => $value) {
+                if ($lang != 'default') {
                     Translation::updateOrInsert(
                         [
-                            'translationable_type' => 'Modules\ProductModule\Entities\Product',
+                            'translationable_type' => Product::class,
                             'translationable_id' => $product->id,
-                            'locale' => $key,
-                            'key' => 'name'],
-                        ['value' => $product->name]
-                    );
-                }
-            } else {
-                if ($request->name[$index] && $key != 'default') {
-                    Translation::updateOrInsert(
-                        [
-                            'translationable_type' => 'Modules\ProductModule\Entities\Product',
-                            'translationable_id' => $product->id,
-                            'locale' => $key,
-                            'key' => 'name'],
-                        ['value' => $request->name[$index]]
+                            'locale' => $lang,
+                            'key' => 'name'
+                        ],
+                        ['value' => $value]
                     );
                 }
             }
         }
 
         Toastr::success('Product updated successfully');
-        return back();
+        return redirect()->route('admin.product.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     * @param Request $request
-     * @param $id
-     * @return RedirectResponse
-     */
     public function destroy(Request $request, $id): RedirectResponse
     {
         $product = $this->product->find($id);
@@ -214,12 +171,6 @@ class ProductController extends Controller
         return back();
     }
 
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param $id
-     * @return JsonResponse
-     */
     public function statusUpdate(Request $request, $id): JsonResponse
     {
         $product = $this->product->find($id);
@@ -229,17 +180,15 @@ class ProductController extends Controller
         return response()->json(response_formatter(DEFAULT_STATUS_UPDATE_200), 200);
     }
 
-    /**
-     * @param Request $request
-     * @return string|StreamedResponse
-     */
     public function download(Request $request): string|StreamedResponse
     {
         $products = $this->product
             ->when($request->has('search'), function ($query) use ($request) {
                 $keys = explode(' ', $request['search']);
-                foreach ($keys as $key) {
-                    $query->orWhere('name', 'LIKE', '%' . $key . '%');
+                if (is_array($keys)) {
+                    foreach ($keys as $key) {
+                        $query->orWhere('name', 'LIKE', '%' . $key . '%');
+                    }
                 }
             })
             ->latest()->get();

@@ -29,6 +29,7 @@ $accepted_booking_count = \Modules\BookingModule\Entities\Booking::where('bookin
         });
     })
     ->count();
+
 $pending_providers = \Modules\ProviderManagement\Entities\Provider::ofApproval(2)->count();
 $denied_providers = \Modules\ProviderManagement\Entities\Provider::ofApproval(0)->count();
 $logo = business_config('business_logo', 'business_information');
@@ -48,12 +49,10 @@ $logo = business_config('business_logo', 'business_information');
         </button>
     </div>
 
-
     <div class="aside-body" data-trigger="scrollbar">
         <div class="user-profile media gap-3 align-items-center my-3">
             <div class="avatar">
                 <img class="avatar-img rounded-circle"
-
                      src="{{onErrorImage(
                         auth()->user()->profile_image,
                         auth()->user()->user_type == 'admin-employee' ? asset('storage/app/public/employee/profile').'/' . auth()->user()->profile_image : asset('storage/app/public/user/profile_image').'/' . auth()->user()->profile_image,
@@ -81,7 +80,7 @@ $logo = business_config('business_logo', 'business_information');
                     <span class="material-icons" title="{{translate('dashboard')}}">dashboard</span>
                     <span class="link-title">{{translate('dashboard')}}</span>
                 </a>
-            </li>
+            </li> 
 
             @if(access_checker('booking_management') || auth()->user()->user_type == 'provider-admin')
                 <li class="nav-category" title="{{translate('booking_management')}}">
@@ -94,30 +93,55 @@ $logo = business_config('business_logo', 'business_information');
                     </a>
                     <ul class="nav sub-menu">
                         <li><a href="{{route('admin.booking.list', ['booking_status'=>'accepted'])}}"
-                               class="{{request()->is('admin/booking/list') && request()->query('booking_status')=='accepted'?'active-menu':''}}"><span
-                                    class="link-title">{{translate('Accepted')}} <span
-                                        class="count">{{$accepted_booking_count}}</span></span></a>
+                               class="{{request()->is('admin/booking/list') && request()->query('booking_status')=='accepted'?'active-menu':''}}">
+                               <span class="link-title">{{translate('Accepted')}} <span class="count">{{$accepted_booking_count}}</span></span></a>
+                        </li>
+                        <li><a href="{{route('admin.booking.list', ['booking_status'=>'pending'])}}"
+                            class="{{request()->is('admin/booking/list') && request()->query('booking_status')=='pending'?'active-menu':''}}">
+                            <span class="link-title">{{translate('Pending')}} <span class="count">{{$booking->where('booking_status', 'pending')->count()}}</span></span></a>
                         </li>
                         <li><a href="{{route('admin.booking.list', ['booking_status'=>'ongoing'])}}"
-                               class="{{request()->is('admin/booking/list') && request()->query('booking_status')=='ongoing'?'active-menu':''}}"><span
-                                    class="link-title">{{translate('Ongoing')}} <span
-                                        class="count">{{$booking->where('booking_status', 'ongoing')->count()}}</span></span></a>
+                               class="{{request()->is('admin/booking/list') && request()->query('booking_status')=='ongoing'?'active-menu':''}}">
+                               <span class="link-title">{{translate('Ongoing')}} <span class="count">{{$booking->where('booking_status', 'ongoing')->count()}}</span></span></a>
                         </li>
                         <li><a href="{{route('admin.booking.list', ['booking_status'=>'completed'])}}"
-                               class="{{request()->is('admin/booking/list') && request()->query('booking_status')=='completed'?'active-menu':''}}"><span
-                                    class="link-title">{{translate('Completed')}} <span
-                                        class="count">{{$booking->where('booking_status', 'completed')->count()}}</span></span></a>
+                               class="{{request()->is('admin/booking/list') && request()->query('booking_status')=='completed'?'active-menu':''}}">
+                               <span class="link-title">{{translate('Completed')}} <span class="count">{{$booking->where('booking_status', 'completed')->count()}}</span></span></a>
                         </li>
                         <li><a href="{{route('admin.booking.list', ['booking_status'=>'canceled'])}}"
-                               class="{{request()->is('admin/booking/list') && request()->query('booking_status')=='canceled'?'active-menu':''}}"><span
-                                    class="link-title">{{translate('Canceled')}} <span
-                                        class="count">{{$booking->where('booking_status', 'canceled')->count()}}</span></span></a>
+                               class="{{request()->is('admin/booking/list') && request()->query('booking_status')=='canceled'?'active-menu':''}}">
+                               <span class="link-title">{{translate('Canceled')}} <span class="count">{{$booking->where('booking_status', 'canceled')->count()}}</span></span></a>
                         </li>
+                        
                     </ul>
                 </li>
             @endif
 
-            
+            @if(access_checker('product_management') || auth()->user()->user_type == 'admin-employee')
+                <li class="nav-category" title="{{translate('product_management')}}">
+                    {{translate('product_management')}}
+                </li>
+                <li class="has-sub-item {{request()->is('admin/product/*')?'sub-menu-opened':''}}">
+                    <a href="#" class="{{request()->is('admin/product/*')?'active-menu':''}}">
+                        <span class="material-icons" title="Products">inventory_2</span>
+                        <span class="link-title">{{translate('products')}}</span>
+                    </a>
+                    <ul class="nav sub-menu">
+                        <li>
+                            <a href="{{route('admin.product.index')}}"
+                               class="{{request()->is('admin/product/list') || request()->is('admin/product/edit/*') ? 'active-menu':''}}">
+                               {{translate('products_list')}}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.product.create')}}"
+                               class="{{request()->is('admin/product/create')?'active-menu':''}}">
+                               {{translate('add_new_product')}}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            @endif
 
             @if(access_checker('service_management') || auth()->user()->user_type == 'provider-admin')
                 <li class="nav-category" title="{{translate('service_management')}}">
@@ -144,13 +168,13 @@ $logo = business_config('business_logo', 'business_information');
                         </li>
                     </ul>
                 </li>
-                <li>
+                {{-- <li>
                     <a href="{{route('admin.product.index')}}"
                        class="{{request()->is('admin/product/list') ||  request()->is('admin/product/edit/*') ? 'active-menu':''}}">
                         <span class="material-icons" title="{{translate('Products')}}">list</span>
                         <span class="link-title">{{translate('Products')}}</span>
                     </a>
-                </li>
+                </li> --}}
                 <li class="has-sub-item {{request()->is('admin/service/*') || request()->is('admin/vendor/*') ?'sub-menu-opened':''}}">
                     <a href="#" class="{{request()->is('admin/service/*')?'active-menu':''}}">
                         <span class="material-icons" title="Services">design_services</span>
@@ -166,7 +190,7 @@ $logo = business_config('business_logo', 'business_information');
                         <li>
                             <a href="{{route('admin.vendor.create')}}"
                                class="{{request()->is('admin/vendor/create')?'active-menu':''}}">
-                                {{translate('Vendors')}}
+                                {{translate('vendors')}}
                             </a>
                         </li>
                     </ul>
@@ -237,7 +261,6 @@ $logo = business_config('business_logo', 'business_information');
                 </li>
             @endif
             
-
             @if(access_checker('employee_management') || auth()->user()->user_type == 'provider-admin')
                 <li class="nav-category"
                     title="{{translate('driver_management')}}">{{translate('driver_management')}}</li>
@@ -323,8 +346,6 @@ $logo = business_config('business_logo', 'business_information');
                 </li>
             @endif
 
-            
-
             @if(access_checker('promotion_management'))
                 <li class="nav-category" title="{{translate('promotion_management')}}">
                     {{translate('promotion_management')}}
@@ -376,19 +397,6 @@ $logo = business_config('business_logo', 'business_information');
                         <span class="link-title">{{translate('page_settings')}}</span>
                     </a>
                 </li>
-                {{-- <li>
-                    <a href="{{route('admin.business-settings.get-database-backup')}}"
-                       class="{{request()->is('admin/business-settings/get-database-backup')?'active-menu':''}}">
-                        <span class="material-icons" title="Page Settings">backup</span>
-                        <span class="link-title">{{translate('Backup_Database')}}</span>
-                    </a>
-                </li> --}}
-                {{-- <li>
-                    <a href="{{route('admin.configuration.language_setup')}}"
-                       class="{{request()->is('admin/configuration/language-setup') || request()->is('admin/language/translate/*') ?'active-menu':''}}">
-                        {{translate('Language Setup')}}
-                    </a>
-                </li> --}}
             @endif
         </ul>
     </div>

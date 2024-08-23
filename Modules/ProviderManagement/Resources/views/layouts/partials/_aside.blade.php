@@ -180,6 +180,13 @@ $logo = business_config('business_logo', 'business_information');
                     </li>
                 </ul>
             </li>
+            <li>
+                <a href="{{route('provider.product.index')}}"
+                   class="{{request()->is('provider/product/list') ||  request()->is('provider/product/edit/*') ? 'active-menu':''}}">
+                    <span class="material-icons" title="{{translate('products')}}">list</span>
+                    <span class="link-title">{{translate('products')}}</span>
+                </a>
+            </li>
             <li class="has-sub-item {{request()->is('provider/service/*') || request()->is('provider/vendor/*') ?'sub-menu-opened':''}}">
                 <a href="#" class="{{request()->is('provider/service/*')?'active-menu':''}}">
                     <span class="material-icons" title="Services">design_services</span>

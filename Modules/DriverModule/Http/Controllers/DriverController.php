@@ -45,7 +45,6 @@ class DriverController extends Controller
         $this->zone = $zone;
     }
 
-
     /**
      * Display a listing of the resource.
      * @param Request $request
@@ -58,7 +57,6 @@ class DriverController extends Controller
 
         return view('drivermodule::employee.create', compact('roles', 'zones'));
     }
-
 
     /**
      * Display a listing of the resource.
@@ -91,10 +89,9 @@ class DriverController extends Controller
         return view('drivermodule::employee.list', compact('employees', 'status', 'search'));
     }
 
-
     /**
      * Store a newly created resource in storage.
-     * @param ProviderStoreRequest $request
+     * @param Request $request
      * @return RedirectResponse
      */
     public function store(Request $request): RedirectResponse
@@ -102,6 +99,8 @@ class DriverController extends Controller
         $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
+            'boat_name' => 'required', // Adding boat_name to validation
+            'boat_number' => 'required', // Adding boat_number to validation
             'email' => 'required|email',
             'phone' => 'required',
             'password' => 'required',
@@ -109,9 +108,10 @@ class DriverController extends Controller
         ]);
 
         $identityImages = [];
-        if($request->identity_images)
-        foreach ($request->identity_images as $image) {
-            $identityImages[] = file_uploader('drivers/identity/', 'png', $image);
+        if ($request->identity_images) {
+            foreach ($request->identity_images as $image) {
+                $identityImages[] = file_uploader('drivers/identity/', 'png', $image);
+            }
         }
 
         if (User::where('email', $request['email'])->first()) {
@@ -127,6 +127,8 @@ class DriverController extends Controller
             $employee = $this->employee;
             $employee->first_name = $request->first_name;
             $employee->last_name = $request->last_name;
+            $employee->boat_name = $request->boat_name; // Adding boat_name to save
+            $employee->boat_number = $request->boat_number; // Adding boat_number to save
             $employee->email = $request->email;
             $employee->phone = $request->phone;
             $employee->profile_image = file_uploader('drivers/profile/', 'png', $request->file('profile_image'));
@@ -178,6 +180,8 @@ class DriverController extends Controller
         $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
+            // 'boat_name' => 'required', // Adding boat_name to validation
+            // 'boat_number' => 'required', // Adding boat_number to validation
             'email' => 'required|email',
             'phone' => 'required',
             'password' => !is_null($request->password) ? 'string|min:8' : '',
@@ -201,13 +205,16 @@ class DriverController extends Controller
             }
             $employee->identification_image = $identityImages;
         }
-        DB::transaction(function () use ($id, $employee, $request, $identityImages) {
+
+        DB::transaction(function () use ($id, $employee, $request) {
             $employee->first_name = $request->first_name;
             $employee->last_name = $request->last_name;
+            $employee->boat_name = $request->boat_name; 
+            $employee->boat_number = $request->boat_number; 
             $employee->email = $request->email;
             $employee->phone = $request->phone;
             if ($request->has('profile_image')) {
-                $employee->profile_image = file_uploader('drivers/profile/', 'png', $request->file('profile_image'), $employee->profile_image);;
+                $employee->profile_image = file_uploader('drivers/profile/', 'png', $request->file('profile_image'), $employee->profile_image);
             }
             $employee->identification_number = $request->identity_number;
             $employee->identification_type = $request->identity_type ?? "";
@@ -215,7 +222,6 @@ class DriverController extends Controller
                 $employee->password = bcrypt($request->password);
             }
             $employee->user_type = 'provider-serviceman';
-            $employee->password = !is_null($request->password) ? bcrypt($request->password) : $employee->password;
             $employee->save();
 
             $employee->roles()->sync([$request['role_id']]);
@@ -253,7 +259,6 @@ class DriverController extends Controller
         Toastr::success(translate(DEFAULT_204['message']));
         return back();
     }
-
 
     /**
      * Update the specified resource in storage.

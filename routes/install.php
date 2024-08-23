@@ -9,7 +9,6 @@
 |
 |
 */
-
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'InstallController@step0')->name('step0');
