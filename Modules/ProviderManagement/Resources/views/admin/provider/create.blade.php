@@ -66,7 +66,6 @@
                                             <label>{{translate('Address')}}</label>
                                         </div>
                                         
-
                                         <div class="row gx-2">
                                             <div class="col-lg-6">
                                                 <div class="form-floating form-floating__icon mb-30">
@@ -75,7 +74,6 @@
                                                     <label>{{translate('Password')}}</label>
                                                     <span class="material-icons togglePassword">visibility_off</span>
                                                     <span class="material-icons">lock</span>
-
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
@@ -88,7 +86,31 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        
+                                        <!-- Permissions Selection -->
+                                        <div>
+                                            <div class="form-floating mb-30">
+                                                <label for="permissions">{{translate('Select Permissions')}}</label>
+                                                <select class="select-identity theme-input-style w-100" name="permissions[]" id="permissions" multiple="multiple" required>
+                                                    <optgroup label="booking_management">
+                                                        <option value="requests">Requests</option>
+                                                    </optgroup>
+                                                    <optgroup label="Service Management">
+                                                        <option value="categories">Categories</option>
+                                                        <option value="services">Services</option>
+                                                    </optgroup>
+                                                    <optgroup label="Driver Management">
+                                                        <option value="driver_list">Driver List</option>
+                                                    </optgroup>
+                                                    <optgroup label="Transaction Management">
+                                                        <option value="transactions">All Transactions</option>
+                                                    </optgroup>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!-- End Permissions Selection -->
                                     </div>
+                                    
                                     <div class="col-md-6">
                                         <div class="d-flex flex-column align-items-center gap-3">
                                             <h3 class="mb-0">{{translate('Image')}}</h3>
@@ -108,136 +130,12 @@
                                                 </div>
                                             </div>
                                             <p class="opacity-75 max-w220 mx-auto">{{translate('Image format - jpg, png,
-                                                jpeg,
-                                                gif Image
-                                                Size -
-                                                maximum size 2 MB Image Ratio - 1:1')}}</p>
+                                                jpeg, gif Image Size - maximum size 2 MB Image Ratio - 1:1')}}</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        {{-- <div class="row gx-2 mt-2">
-                            <div class="col-md-6">
-                                <div class="card h-100">
-                                    <div class="card-body">
-                                        <h4 class="c1 mb-20">{{translate('Business_Information')}}</h4>
-                                        <div class="mb-30">
-                                            <select class="select-identity theme-input-style w-100" name="identity_type"
-                                                    required>
-                                                <option selected disabled>{{translate('Select_Identity_Type')}}</option>
-                                                <option value="passport"
-                                                    {{old('identity_type') == 'passport' ? 'selected': ''}}>
-                                                    {{translate('Passport')}}</option>
-                                                <option value="driving_license"
-                                                    {{old('identity_type') == 'driving_license' ? 'selected': ''}}>
-                                                    {{translate('Driving_License')}}</option>
-                                                <option value="nid"
-                                                    {{old('identity_type') == 'passport' ? 'selected': ''}}>
-                                                    {{translate('nid')}}</option>
-                                                <option value="trade_license"
-                                                    {{old('identity_type') == 'nid' ? 'selected': ''}}>
-                                                    {{translate('Trade_License')}}</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-floating form-floating__icon mb-30">
-                                            <input type="text" class="form-control" name="identity_number"
-                                                   value="{{old('identity_number')}}"
-                                                   placeholder="{{translate('Identity_Number')}}" required>
-                                            <label>{{translate('Identity_Number')}}</label>
-                                            <span class="material-icons">badge</span>
-                                        </div>
-
-                                        <div class="upload-file w-100">
-                                            <h3 class="mb-3">{{translate('Identification_Image')}}</h3>
-                                            <div id="multi_image_picker"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card h-100">
-                                    <div class="card-body">
-                                        <div class="d-flex flex-wrap justify-content-between gap-3 mb-20">
-                                            <h4 class="c1">{{translate('Contact_Person')}}</h4>
-                                        </div>
-                                        <div class="form-floating form-floating__icon mb-30">
-                                            <input type="text" class="form-control" name="contact_person_name"
-                                                   value="{{old('contact_person_name')}}" placeholder="name" required>
-                                            <label>{{translate('Name')}}</label>
-                                            <span class="material-icons">account_circle</span>
-                                        </div>
-
-                                        <h4 class="c1 mb-20">{{translate('Account_Information')}}</h4>
-                                        <div class="form-floating form-floating__icon mb-30">
-                                            <input type="email" id="account_email" class="form-control"
-                                                   value="{{old('account_email')}}" name="account_email"
-                                                   placeholder="{{translate('Email')}}" readonly>
-                                            <label>{{translate('Email_*')}}</label>
-                                            <span class="material-icons">mail</span>
-                                        </div>
-                                        <div class="form-floating form-floating__icon mb-30">
-                                            <input type="tel" class="form-control"
-                                                   name="account_phone"
-                                                   id="account_phone" readonly>
-                                            <label>{{translate('Phone')}}</label>
-                                            <span class="material-icons">phone</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-12 mt-4">
-                                <div class="card h-100">
-                                    <div class="card-body">
-                                        <div class="d-flex flex-wrap justify-content-between gap-3 mb-20">
-                                            <h4 class="c1">{{translate('Select Address from Map')}}</h4>
-                                        </div>
-                                        <div class="row gx-2">
-                                            <div class="col-md-6 col-12">
-                                                <div class="mb-30">
-                                                    <div class="form-floating form-floating__icon">
-                                                        <input type="text" class="form-control" name="latitude"
-                                                               id="latitude"
-                                                               placeholder="{{translate('latitude')}} *"
-                                                               value="" required readonly
-                                                               data-bs-toggle="tooltip" data-bs-placement="top"
-                                                               title="{{translate('Select from map')}}">
-                                                        <label>{{translate('latitude')}} *</label>
-                                                        <span class="material-symbols-outlined">location_on</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 col-12">
-                                                <div class="mb-30">
-                                                    <div class="form-floating form-floating__icon">
-                                                        <input type="text" class="form-control" name="longitude"
-                                                               id="longitude"
-                                                               placeholder="{{translate('longitude')}} *"
-                                                               value="" required readonly
-                                                               data-bs-toggle="tooltip" data-bs-placement="top"
-                                                               title="{{translate('Select from map')}}">
-                                                        <label>{{translate('longitude')}} *</label>
-                                                        <span class="material-symbols-outlined">location_on</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 mb-4">
-                                                <div id="location_map_div" class="location_map_class">
-                                                    <input id="pac-input" class="form-control w-auto"
-                                                           data-toggle="tooltip"
-                                                           data-placement="right"
-                                                           data-original-title="{{ translate('search_your_location_here') }}"
-                                                           type="text" placeholder="{{ translate('search_here') }}"/>
-                                                    <div id="location_map_canvas"
-                                                         class="overflow-hidden rounded canvas_class"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> --}}
                         <div class="d-flex gap-4 flex-wrap justify-content-end mt-20">
                             <button type="reset" class="btn btn--secondary">{{translate('Reset')}}</button>
                             <button type="submit" class="btn btn--primary">{{translate('Submit')}}</button>
@@ -251,11 +149,10 @@
 
 @push('script')
 
-    <script src="{{asset('public/assets/provider-module')}}/js//tags-input.min.js"></script>
+    <script src="{{asset('public/assets/provider-module')}}/js/tags-input.min.js"></script>
     <script src="{{asset('public/assets/provider-module')}}/js/spartan-multi-image-picker.js"></script>
 
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key={{business_config('google_map', 'third_party')?->live_values['map_api_key_client']}}&libraries=places&v=3.45.8"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{business_config('google_map', 'third_party')?->live_values['map_api_key_client']}}&libraries=places&v=3.45.8"></script>
 
     <script>
         "use strict";
@@ -274,6 +171,16 @@
                 $('#account_phone').val(`${countryCode} ${$("#company_phone").val()}`);
                 $('#account_email').val($('#company_email').val());
             }, 2000);
+        });
+
+        $(document).ready(function() {
+            // Initialize Select2 for permissions
+            $('#permissions').select2({
+                placeholder: "Select Permissions",  // Placeholder text
+                allowClear: true,  // Allows user to clear selection
+                multiple: true,  // Allows multiple selections
+                width: '100%'  // Ensures the dropdown fits within its container
+            });
         });
 
     </script>
@@ -364,7 +271,6 @@
         $(document).ready(function () {
             function initAutocomplete() {
                 var myLatLng = {
-
                     lat: 23.811842872190343,
                     lng: 90.356331
                 };

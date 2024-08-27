@@ -1,5 +1,4 @@
 <?php
-
 namespace Modules\AdminModule\Http\Middleware;
 
 use Brian2694\Toastr\Facades\Toastr;
@@ -18,8 +17,12 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next)
     {
         if (auth()->check() && in_array(auth()->user()->user_type, ADMIN_USER_TYPES)) {
+            $userPermissions = json_decode(auth()->user()->permissions, true) ?? [];
+            view()->share('userPermissions', $userPermissions);
+
             return $next($request);
         }
+
         Toastr::info(ACCESS_DENIED['message']);
         return redirect('admin/auth/login');
     }

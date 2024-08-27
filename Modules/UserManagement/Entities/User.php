@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 namespace Modules\UserManagement\Entities;
 
@@ -24,9 +24,7 @@ use Laravel\Passport\Token;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
-
-    use HasFactory, HasUuid;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, HasUuid;
 
     protected $hidden = [
         'password'
@@ -39,35 +37,39 @@ class User extends Authenticatable
         'identification_image' => 'array',
         'wallet_balance' => 'float',
         'loyalty_point' => 'float',
+        'permissions' => 'array', // Added to handle permissions as an array
     ];
 
     protected $fillable = [
-        'uuid', 'first_name', 'last_name', 'email', 'phone', 'identification_number', 'identification_type', 'identification_image', 'date_of_birth', 'gender',
-        'profile_image', 'fcm_token', 'is_phone_verified', 'is_email_verified', 'phone_verified_at', 'email_verified_at', 'password', 'is_active', 'provider_id', 'user_type',
-        'wallet_balance', 'loyalty_point', 'ref_code', 'referred_by', 'boat_name', 'boat_number'
+        'uuid', 'first_name', 'last_name', 'email', 'phone', 'identification_number', 
+        'identification_type', 'identification_image', 'date_of_birth', 'gender',
+        'profile_image', 'fcm_token', 'is_phone_verified', 'is_email_verified', 
+        'phone_verified_at', 'email_verified_at', 'password', 'is_active', 
+        'provider_id', 'user_type', 'wallet_balance', 'loyalty_point', 'ref_code', 
+        'referred_by', 'boat_name', 'boat_number'
     ];
 
-    public function roles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'user_roles');
     }
 
-    public function bookings(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class, 'customer_id', 'id');
     }
 
-    public function reviews(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function reviews(): HasMany
     {
         return $this->hasMany(Review::class, 'customer_id');
     }
 
-    public function zones(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function zones(): BelongsToMany
     {
         return $this->belongsToMany(Zone::class, 'user_zones');
     }
 
-    public function addresses(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function addresses(): HasMany
     {
         return $this->hasMany(UserAddress::class);
     }
@@ -122,7 +124,7 @@ class User extends Authenticatable
         return $this->hasMany(SearchedData::class, 'user_id', 'id');
     }
 
-    public function channelConversations(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function channelConversations(): HasMany
     {
         return $this->hasMany(ChannelConversation::class, 'user_id', 'id');
     }

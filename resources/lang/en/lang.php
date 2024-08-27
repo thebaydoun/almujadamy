@@ -3686,4 +3686,13 @@ _Message' => 'Customer notification for provider bid offer
   'products_list' => 'Products list',
   'products' => 'Products',
   'vendors' => 'Vendors',
+  'Add_New_jjjjProvider' => 'Add New jjjjProvider',
+  'Select Permissions' => 'Select Permissions',
+  'Image format - jpg, png, jpeg, gif. Maximum size 2 MB. Image Ratio - 1:1' => 'Image format - jpg  png  jpeg  gif. Maximum size 2 MB. Image Ratio - 1:1',
+  'Image format - jpg, png,
+                                                jpeg, gif Image Size - maximum size 2 MB Image Ratio - 1:1' => 'Image format - jpg  png 
+                                                jpeg  gif Image Size - maximum size 2 MB Image Ratio - 1:1',
+  'Ongsdsoing' => 'Ongsdsoing',
+  'Transactions' => 'Transactions',
+  'drivers' => 'Drivers',
 );

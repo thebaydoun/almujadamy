@@ -45,19 +45,22 @@ class ProviderController extends Controller
     protected BankDetail $bank_detail;
 
     public function __construct(Transaction $transaction, Review $review, Serviceman $serviceman, Provider $provider, User $owner, Service $service, SubscribedService $subscribedService, Booking $booking, Zone $zone, BankDetail $bank_detail)
-    {
-        $this->provider = $provider;
-        $this->owner = $owner;
-        $this->user = $owner;
-        $this->service = $service;
-        $this->subscribedService = $subscribedService;
-        $this->booking = $booking;
-        $this->serviceman = $serviceman;
-        $this->review = $review;
-        $this->transaction = $transaction;
-        $this->zone = $zone;
-        $this->bank_detail = $bank_detail;
-    }
+{
+    $this->provider = $provider;
+    $this->owner = $owner;
+    $this->user = $owner;
+    $this->service = $service;
+    $this->subscribedService = $subscribedService;
+    $this->booking = $booking;
+    $this->serviceman = $serviceman;
+    $this->review = $review;
+    $this->transaction = $transaction;
+    $this->zone = $zone;
+    $this->bank_detail = $bank_detail;
+
+    // Decode the permissions for the logged-in user
+    $this->userPermissions = json_decode(auth()->user()->permissions, true) ?? [];
+}
 
     /**
      * Display a listing of the resource.
@@ -66,6 +69,7 @@ class ProviderController extends Controller
      */
     public function index(Request $request): Renderable
     {
+        $userPermissions = json_decode(auth()->user()->permissions, true) ?? [];
         Validator::make($request->all(), [
             'search' => 'string',
             'status' => 'required|in:active,inactive,all'
@@ -97,8 +101,9 @@ class ProviderController extends Controller
         $topCards['total_onboarding_requests'] = $this->provider->ofApproval(2)->count();
         $topCards['total_active_providers'] = $this->provider->ofApproval(1)->ofStatus(1)->count();
         $topCards['total_inactive_providers'] = $this->provider->ofApproval(1)->ofStatus(0)->count();
+        
 
-        return view('providermanagement::admin.provider.index', compact('providers', 'topCards', 'search', 'status'));
+        return view('providermanagement::admin.provider.index', compact('providers', 'topCards', 'search', 'status', 'userPermissions'));
     }
 
     /**
@@ -117,73 +122,74 @@ class ProviderController extends Controller
      * @return RedirectResponse
      */
     public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
+{
+    $request->validate([
+        'account_email' => 'required|email',
+        'account_phone' => 'required',
+        'password' => 'required|min:8',
+        'confirm_password' => 'required|same:password',
+        'logo' => 'nullable|image|mimes:jpeg,jpg,png,gif',
+        'zone_id' => 'nullable|uuid',
+        'permissions' => 'required|array', // Ensure permissions is an array
+    ]);
 
-            'account_email' => 'required|email',
-            'account_phone' => 'required',
-            'password' => 'required|min:8',
-            'confirm_password' => 'required|same:password',
-
-            'logo' => 'nullable|image|mimes:jpeg,jpg,png,gif',
-
-
-            'zone_id' => 'required|uuid',
-        ]);
-
-        if (User::where('email', $request['account_email'])->first()) {
-            Toastr::error(translate('Email already taken'));
-            return back();
-        }
-        if (User::where('phone', $request['account_phone'])->first()) {
-            Toastr::error(translate('Phone already taken'));
-            return back();
-        }
-
-        $identityImages = [];
-        if ($request->has('identity_images')) {
-            foreach ($request->identity_images as $image) {
-                $identityImages[] = file_uploader('provider/identity/', 'png', $image);
-            }
-        }
-
-        $provider = $this->provider;
-        $provider->company_name = $request->company_name;
-        $provider->company_phone = $request->account_phone;
-        $provider->company_email = $request->account_email;
-        $provider->logo = file_uploader('provider/logo/', 'png', $request->file('logo'));
-        $provider->company_address = $request->company_address;
-
-        $provider->contact_person_name = $request->company_name;
-        $provider->contact_person_phone = $request->account_phone;
-        $provider->contact_person_email = $request->account_email;
-        $provider->is_approved = 1;
-        $provider->is_active = 1;
-        $provider->zone_id = $request['zone_id'];
-        $provider->coordinates = ['latitude' => $request['latitude'], 'longitude' => $request['longitude']];
-
-        $owner = $this->owner;
-        $owner->email = $request->account_email;
-        $owner->phone = $request->account_phone;
-        $owner->identification_number = $request->identity_number;
-        $owner->identification_type = $request->identity_type ?? "";
-        $owner->is_active = 1;
-        $owner->is_email_verified = 1;
-        $owner->is_phone_verified = 1;
-        $owner->identification_image = $identityImages;
-        $owner->password = bcrypt($request->password);
-        $owner->user_type = 'provider-admin';
-
-        DB::transaction(function () use ($provider, $owner, $request) {
-            $owner->save();
-            $owner->zones()->sync($request->zone_id);
-            $provider->user_id = $owner->id;
-            $provider->save();
-        });
-
-        Toastr::success(translate(CAMPAIGN_UPDATE_200['message']));
+    if (User::where('email', $request['account_email'])->first()) {
+        Toastr::error(translate('Email already taken'));
         return back();
     }
+    if (User::where('phone', $request['account_phone'])->first()) {
+        Toastr::error(translate('Phone already taken'));
+        return back();
+    }
+
+    $identityImages = [];
+    if ($request->has('identity_images')) {
+        foreach ($request->identity_images as $image) {
+            $identityImages[] = file_uploader('provider/identity/', 'png', $image);
+        }
+    }
+
+    $provider = $this->provider;
+    $provider->company_name = $request->company_name;
+    $provider->company_phone = $request->account_phone;
+    $provider->company_email = $request->account_email;
+    $provider->logo = file_uploader('provider/logo/', 'png', $request->file('logo'));
+    $provider->company_address = $request->company_address;
+
+    $provider->contact_person_name = $request->company_name;
+    $provider->contact_person_phone = $request->account_phone;
+    $provider->contact_person_email = $request->account_email;
+    $provider->is_approved = 1;
+    $provider->is_active = 1;
+    $provider->zone_id = $request['zone_id'];
+    $provider->coordinates = ['latitude' => $request['latitude'], 'longitude' => $request['longitude']];
+
+    $owner = $this->owner;
+    $owner->email = $request->account_email;
+    $owner->phone = $request->account_phone;
+    $owner->identification_number = $request->identity_number;
+    $owner->identification_type = $request->identity_type ?? "";
+    $owner->is_active = 1;
+    $owner->is_email_verified = 1;
+    $owner->is_phone_verified = 1;
+    $owner->identification_image = $identityImages;
+    $owner->password = bcrypt($request->password);
+    $owner->user_type = 'provider-admin';
+
+    // Store permissions as JSON in the 'permissions' column
+    $owner->permissions = json_encode($request->input('permissions'));
+
+    DB::transaction(function () use ($provider, $owner, $request) {
+        $owner->save();
+        $owner->zones()->sync($request->zone_id);
+        $provider->user_id = $owner->id;
+        $provider->save();
+    });
+
+    Toastr::success(translate(CAMPAIGN_UPDATE_200['message']));
+    return back();
+}
+
 
     /**
      * Show the specified resource.
