@@ -45,23 +45,27 @@ class ProviderController extends Controller
     protected BankDetail $bank_detail;
 
     public function __construct(Transaction $transaction, Review $review, Serviceman $serviceman, Provider $provider, User $owner, Service $service, SubscribedService $subscribedService, Booking $booking, Zone $zone, BankDetail $bank_detail)
-{
-    $this->provider = $provider;
-    $this->owner = $owner;
-    $this->user = $owner;
-    $this->service = $service;
-    $this->subscribedService = $subscribedService;
-    $this->booking = $booking;
-    $this->serviceman = $serviceman;
-    $this->review = $review;
-    $this->transaction = $transaction;
-    $this->zone = $zone;
-    $this->bank_detail = $bank_detail;
-
-    // Decode the permissions for the logged-in user
-    $this->userPermissions = json_decode(auth()->user()->permissions, true) ?? [];
-}
-
+    {
+        $this->provider = $provider;
+        $this->owner = $owner;
+        $this->user = $owner;
+        $this->service = $service;
+        $this->subscribedService = $subscribedService;
+        $this->booking = $booking;
+        $this->serviceman = $serviceman;
+        $this->review = $review;
+        $this->transaction = $transaction;
+        $this->zone = $zone;
+        $this->bank_detail = $bank_detail;
+    
+        // Check if user is authenticated before accessing permissions
+        if (auth()->check()) {
+            $this->userPermissions = json_decode(auth()->user()->permissions, true) ?? [];
+        } else {
+            $this->userPermissions = [];
+        }
+    }
+    
     /**
      * Display a listing of the resource.
      * @param Request $request

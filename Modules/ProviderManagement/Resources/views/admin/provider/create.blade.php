@@ -92,7 +92,7 @@
                                             <div class="form-floating mb-30">
                                                 <label for="permissions">{{translate('Select Permissions')}}</label>
                                                 <select class="select-identity theme-input-style w-100" name="permissions[]" id="permissions" multiple="multiple" required>
-                                                    <optgroup label="booking_management">
+                                                    <optgroup label="Booking Management">
                                                         <option value="requests">Requests</option>
                                                     </optgroup>
                                                     <optgroup label="Service Management">

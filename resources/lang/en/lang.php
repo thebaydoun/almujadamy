@@ -3695,4 +3695,6 @@ _Message' => 'Customer notification for provider bid offer
   'Ongsdsoing' => 'Ongsdsoing',
   'Transactions' => 'Transactions',
   'drivers' => 'Drivers',
+  'commssission_earning' => 'Commssission earning',
+  'Product Sub Categories' => 'Product Sub Categories',
 );

@@ -182,9 +182,12 @@ $logo = business_config('business_logo', 'business_information');
                                     {{translate('Sub Category Setup')}}
                                 </a>
                             </li>
+                            
                         </ul>
                     </li>
                 @endif
+
+                
 
                 @if(in_array('services', $userPermissions) || auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'super-admin')
                     <li class="has-sub-item {{request()->is('admin/service/') || request()->is('admin/vendor/') ?'sub-menu-opened':''}} service-management">
@@ -205,6 +208,7 @@ $logo = business_config('business_logo', 'business_information');
                                     {{translate('vendors')}}
                                 </a>
                             </li>
+                            
                         </ul>
                     </li>
                 @endif
@@ -229,6 +233,38 @@ $logo = business_config('business_logo', 'business_information');
                         </li>
                         <li><a href="{{route('admin.provider.create')}}"
                                class="{{(request()->is('admin/provider/create'))?'active-menu':''}}">{{translate('Add_New_Provider')}}</a>
+                        </li>
+                    </ul>
+                </li>
+            @endif
+
+            @if(in_array('product_management', $userPermissions) || auth()->user()->user_type == 'super-admin')
+                <li class="nav-category product-management" title="{{translate('product_management')}}">
+                    {{translate('product_management')}}
+                </li>
+                <li class="has-sub-item {{request()->is('admin/product/*') ? 'sub-menu-opened' : ''}} product-management">
+                    <a href="#" class="{{request()->is('admin/product/*') ? 'active-menu' : ''}}">
+                        <span class="material-icons" title="{{translate('Products')}}">list</span>
+                        <span class="link-title">{{translate('Products')}}</span>
+                    </a>
+                    <ul class="nav sub-menu">
+                        <li>
+                            <a href="{{route('admin.product.index')}}"
+                               class="{{request()->is('admin/product/list') ||  request()->is('admin/product/edit/*') ? 'active-menu':''}}">
+                                {{translate('Product List')}}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.product.create')}}"
+                               class="{{request()->is('admin/product/create') ? 'active-menu':''}}">
+                                {{translate('Add New Product')}}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.product.index')}}"
+                               class="{{request()->is('admin/product/sub-category') ? 'active-menu':''}}">
+                                {{translate('Product Sub Categories')}}
+                            </a>
                         </li>
                     </ul>
                 </li>
@@ -266,7 +302,7 @@ $logo = business_config('business_logo', 'business_information');
                     title="{{translate('employee_management')}}">{{translate('employee_management')}}</li>
                 <li>
                     <a href="{{route('admin.employee.index')}}"
-                       class="{{request()->is('admin/employee/list') ||  request()->is('admin/employee/edit/*') ? 'active-menu':''}}">
+                       class="{{request()->is('admin/employee/list') || request()->is('admin/employee/edit/*') ? 'active-menu':''}}">
                         <span class="material-icons" title="{{translate('employee_list')}}">list</span>
                         <span class="link-title">{{translate('employee_list')}}</span>
                     </a>

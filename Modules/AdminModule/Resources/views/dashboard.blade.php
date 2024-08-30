@@ -16,14 +16,26 @@
                                  alt="">
                         </div>
                     </div>
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="business-summary business-summary-earning">
-                            <h2>{{data_get($data[0], 'top_cards.total_commission_earning', 0)}}</h2>
-                            <h3>{{translate('commission_earning')}}</h3>
-                            <img src="{{asset('public/assets/admin-module')}}/img/icons/total-earning.png"
-                                 class="absolute-img" alt="">
-                        </div>
-                    </div>
+                    <!-- Include Font Awesome CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<div class="col-lg-3 col-sm-6">
+    <div class="business-summary business-summary-earning" style="position: relative;">
+        <h2 id="cost-display">{{data_get($data[0], 'top_cards.total_commission_earning', 0)}}</h2>
+        <input type="text" id="cost-input" value="{{data_get($data[0], 'top_cards.total_commission_earning', 0)}}" style="display: none; width: 100%; color: black;"/>
+        <h3>{{translate('cost')}}</h3>
+        <img src="{{asset('public/assets/admin-module')}}/img/icons/total-earning.png"
+             class="absolute-img" alt="">
+
+        <!-- Edit Icon in the corner -->
+        <a href="#" class="edit-icon" style="position: absolute; top: 10px; right: 10px; color: #333; font-size: 18px;">
+            <i class="fas fa-edit"></i>
+        </a>
+    </div>
+</div>
+
+
+
                     <div class="col-lg-3 col-sm-6">
                         <div class="business-summary business-summary-providers">
                             <h2>{{data_get($data[0], 'top_cards.total_fee_earning', 0)}}</h2>
@@ -358,5 +370,42 @@
         $(".recent-booking-redirect").on('click', function(){
             location.href = $(this).data('route');
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+        const editIcon = document.querySelector('.edit-icon');
+        const costDisplay = document.getElementById('cost-display');
+        const costInput = document.getElementById('cost-input');
+
+        editIcon.addEventListener('click', function (e) {
+            e.preventDefault();
+            // Toggle visibility
+            costDisplay.style.display = costDisplay.style.display === 'none' ? 'block' : 'none';
+            costInput.style.display = costInput.style.display === 'none' ? 'block' : 'none';
+
+            // Focus the input field
+            if (costInput.style.display === 'block') {
+                costInput.focus();
+            }
+        });
+
+    // Handle input blur event to save the changes
+    costInput.addEventListener('blur', function () {
+        // Save the value (via AJAX or form submission)
+        let newValue = costInput.value;
+        costDisplay.textContent = newValue;
+
+        // Toggle back to display mode
+        costDisplay.style.display = 'block';
+        costInput.style.display = 'none';
+
+        // You can make an AJAX request here to save the value to the server
+    });
+});
+
     </script>
+    <style>
+        .editable-cost {
+    color: black;
+}
+    </style>
 @endpush
