@@ -1,6 +1,5 @@
 <?php return array (
   'add_new_product' => 'Add New Product',
-  'product_management' => 'Product Management',
   'product_image' => 'Product Image',
   'general_information' => 'General information',
   'edit_product' => 'Edit Product',
@@ -2841,6 +2840,7 @@
   'Service Request Deny_Message' => 'Service Request Deny Message',
   'roket_number' => 'Roket number',
   'remarks' => 'Remarks',
+  'product_management' => 'Product Management',
   'eewed' => 'Eewed',
   'fvfd' => 'Fvfd',
   'fdvgdf' => 'Fdvgdf',
@@ -3697,4 +3697,8 @@ _Message' => 'Customer notification for provider bid offer
   'drivers' => 'Drivers',
   'commssission_earning' => 'Commssission earning',
   'Product Sub Categories' => 'Product Sub Categories',
+  'products_management' => 'Products management',
+  'addsf_new_product' => 'Addsf new product',
+  'adشسيd_new_product' => 'Adشسيd new product',
+  'generefdeal_information' => 'Generefdeal information',
 );

@@ -30,6 +30,19 @@ $accepted_booking_count = \Modules\BookingModule\Entities\Booking::where('bookin
     })
     ->count();
 
+    $accepted_booking_count = \Modules\BookingModule\Entities\Booking::where('booking_status', 'accepted')
+    ->when($max_booking_amount > 0, function ($query) use ($max_booking_amount) {
+        $query->where(function ($query) use ($max_booking_amount) {
+            $query->where('payment_method', 'cash_after_service')
+                ->where(function ($query) use ($max_booking_amount) {
+                    $query->where('is_verified', 1)
+                        ->orWhere('total_booking_amount', '<=', $max_booking_amount);
+                })
+                ->orWhere('payment_method', '<>', 'cash_after_service');
+        });
+    })
+    ->count();
+
 $pending_providers = \Modules\ProviderManagement\Entities\Provider::ofApproval(2)->count();
 $denied_providers = \Modules\ProviderManagement\Entities\Provider::ofApproval(0)->count();
 $logo = business_config('business_logo', 'business_information');
@@ -83,49 +96,50 @@ $logo = business_config('business_logo', 'business_information');
             </li> 
 
             <!-- Booking Management Section -->
-            @if(in_array('booking_management', $userPermissions) || auth()->user()->user_type == 'provider-admin' || auth()->user()->user_type == 'super-admin')
-                <li class="nav-category booking-management" title="{{translate('booking_management')}}">
-                    {{translate('booking_management')}}
-                </li>
-                <li class="has-sub-item {{request()->is('admin/booking/*') ? 'sub-menu-opened' : ''}} booking-management">
-                    <a href="#" class="{{request()->is('admin/booking/*') ? 'active-menu' : ''}}">
-                        <span class="material-icons" title="Bookings">calendar_month</span>
-                        <span class="link-title">{{translate('bookings')}}</span>
-                    </a>
-                    <ul class="nav sub-menu">
-                        <li><a href="{{route('admin.booking.list', ['booking_status' => 'accepted'])}}"
-                               class="{{request()->is('admin/booking/list') && request()->query('booking_status') == 'accepted' ? 'active-menu' : ''}}">
-                               <span class="link-title">{{translate('Accepted')}} <span class="count">{{$accepted_booking_count}}</span></span></a>
-                        </li>
-                        <li><a href="{{route('admin.booking.list', ['booking_status' => 'pending'])}}"
-                               class="{{request()->is('admin/booking/list') && request()->query('booking_status') == 'pending' ? 'active-menu' : ''}}">
-                               <span class="link-title">{{translate('Pending')}} <span class="count">{{$booking->where('booking_status', 'pending')->count()}}</span></span></a>
-                        </li>
-                        <li><a href="{{route('admin.booking.list', ['booking_status' => 'ongoing'])}}"
-                               class="{{request()->is('admin/booking/list') && request()->query('booking_status') == 'ongoing' ? 'active-menu' : ''}}">
-                               <span class="link-title">{{translate('Ongoing')}} <span class="count">{{$booking->where('booking_status', 'ongoing')->count()}}</span></span></a>
-                        </li>
-                        <li><a href="{{route('admin.booking.list', ['booking_status' => 'completed'])}}"
-                               class="{{request()->is('admin/booking/list') && request()->query('booking_status') == 'completed' ? 'active-menu' : ''}}">
-                               <span class="link-title">{{translate('Completed')}} <span class="count">{{$booking->where('booking_status', 'completed')->count()}}</span></span></a>
-                        </li>
+            @if(auth()->user()->user_type == 'super-admin' || (auth()->user()->user_type == 'provider-admin' && in_array('requests', $userPermissions)))
+            <li class="nav-category booking-management" title="{{translate('booking_management')}}">
+                {{translate('booking_management')}}
+            </li>
+             <li class="has-sub-item {{request()->is('admin/booking/*') ? 'sub-menu-opened' : ''}} booking-management">
+            <a href="#" class="{{request()->is('admin/booking/*') ? 'active-menu' : ''}}">
+            <span class="material-icons" title="Bookings">calendar_month</span>
+            <span class="link-title">{{translate('bookings')}}</span>
+        </a>
+        <ul class="nav sub-menu">
+            <li><a href="{{route('admin.booking.list', ['booking_status' => 'accepted'])}}"
+                   class="{{request()->is('admin/booking/list') && request()->query('booking_status') == 'accepted' ? 'active-menu' : ''}}">
+                   <span class="link-title">{{translate('Accepted')}} <span class="count">{{$accepted_booking_count}}</span></span></a>
+            </li>
+            <li><a href="{{route('admin.booking.list', ['booking_status' => 'pending'])}}"
+                   class="{{request()->is('admin/booking/list') && request()->query('booking_status') == 'pending' ? 'active-menu' : ''}}">
+                   <span class="link-title">{{translate('Pending')}} <span class="count">{{$pending_booking_count}}</span></span></a>
+            </li>
+            <li><a href="{{route('admin.booking.list', ['booking_status' => 'ongoing'])}}"
+                   class="{{request()->is('admin/booking/list') && request()->query('booking_status') == 'ongoing' ? 'active-menu' : ''}}">
+                   <span class="link-title">{{translate('Ongoing')}} <span class="count">{{$booking->where('booking_status', 'ongoing')->count()}}</span></span></a>
+            </li>
+            <li><a href="{{route('admin.booking.list', ['booking_status' => 'completed'])}}"
+                   class="{{request()->is('admin/booking/list') && request()->query('booking_status') == 'completed' ? 'active-menu' : ''}}">
+                   <span class="link-title">{{translate('Completed')}} <span class="count">{{$booking->where('booking_status', 'completed')->count()}}</span></span></a>
+            </li>
                         <li><a href="{{route('admin.booking.list', ['booking_status' => 'canceled'])}}"
-                               class="{{request()->is('admin/booking/list') && request()->query('booking_status') == 'canceled' ? 'active-menu' : ''}}">
-                               <span class="link-title">{{translate('Canceled')}} <span class="count">{{$booking->where('booking_status', 'canceled')->count()}}</span></span></a>
+                        class="{{request()->is('admin/booking/list') && request()->query('booking_status') == 'canceled' ? 'active-menu' : ''}}">
+                        <span class="link-title">{{translate('Canceled')}} <span class="count">{{$booking->where('booking_status', 'canceled')->count()}}</span></span></a>
                         </li>
                     </ul>
                 </li>
             @endif
 
+
             <!-- Driver Management Section -->
-            @if(in_array('driver_management', $userPermissions) || auth()->user()->user_type == 'provider-admin' || auth()->user()->user_type == 'super-admin')
+            @if(auth()->user()->user_type == 'super-admin' || in_array('driver_list', $userPermissions) && auth()->user()->user_type == 'provider-admin' )
                 <li class="nav-category driver-management" title="{{translate('driver_management')}}">
                     {{translate('driver_management')}}
                 </li>
                 <li class="has-sub-item {{request()->is('admin/driver/*') ? 'sub-menu-opened' : ''}} driver-management">
                     <a href="#" class="{{request()->is('admin/driver/*') ? 'active-menu' : ''}}">
                         <span class="material-icons" title="Drivers">directions_car</span>
-                        <span class="link-title">{{translate('drivers')}}</span>
+                        <span class="link-title">{{translate('driver_management')}}</span>
                     </a>
                     <ul class="nav sub-menu">
                         <li><a href="{{route('admin.driver.index')}}"
@@ -136,33 +150,13 @@ $logo = business_config('business_logo', 'business_information');
                 </li>
             @endif
 
-            <!-- Transaction Management Section -->
-            @if(in_array('transaction_management', $userPermissions))
-    <li class="nav-category transaction-management" title="{{translate('transaction_management')}}">
-        {{translate('transaction_management')}}
-    </li>
-    <li class="has-sub-item {{request()->is('admin/transaction/*') ? 'sub-menu-opened' : ''}} transaction-management">
-        <a href="#" class="{{request()->is('admin/transaction/*') ? 'active-menu' : ''}}">
-            <span class="material-icons" title="Transactions">attach_money</span>
-            <span class="link-title">{{translate('transactions')}}</span>
-        </a>
-        <ul class="nav sub-menu">
-            <li><a href="{{route('admin.transaction.list', ['trx_type' => 'all'])}}"
-                   class="{{request()->is('admin/transaction/list') ? 'active-menu' : ''}}">
-                   {{translate('All Transactions')}}
-            </a></li>
-        </ul>
-    </li>
-@endif
-
-
             <!-- Service Management Section -->
-            @if((access_checker('service_management') || auth()->user()->user_type == 'provider-admin' || auth()->user()->user_type == 'super-admin') &&
-                (in_array('service_categories', $userPermissions) || in_array('services', $userPermissions) || auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'super-admin'))
+            @if((auth()->user()->user_type == 'super-admin') || auth()->user()->user_type == 'provider-admin' &&
+                (in_array('categories', $userPermissions) || in_array('services', $userPermissions)))
                 <li class="nav-category service-management" title="{{translate('service_management')}}">
                     {{translate('service_management')}}
                 </li>
-                @if(in_array('service_categories', $userPermissions) || auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'super-admin')
+               
                     <li class="has-sub-item {{(request()->is('admin/category/')  ||  request()->is('admin/sub-category/'))?'sub-menu-opened':''}} service-management">
                         <a href="#"
                            class="{{(request()->is('admin/category/') || request()->is('admin/sub-category/'))?'active-menu':''}}">
@@ -185,9 +179,6 @@ $logo = business_config('business_logo', 'business_information');
                             
                         </ul>
                     </li>
-                @endif
-
-                
 
                 @if(in_array('services', $userPermissions) || auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'super-admin')
                     <li class="has-sub-item {{request()->is('admin/service/') || request()->is('admin/vendor/') ?'sub-menu-opened':''}} service-management">
@@ -238,14 +229,14 @@ $logo = business_config('business_logo', 'business_information');
                 </li>
             @endif
 
-            @if(in_array('product_management', $userPermissions) || auth()->user()->user_type == 'super-admin')
+            @if(auth()->user()->user_type == 'super-admin' || in_array('product_management', $userPermissions) &&  in_array('requests', $userPermissions))
                 <li class="nav-category product-management" title="{{translate('product_management')}}">
                     {{translate('product_management')}}
                 </li>
                 <li class="has-sub-item {{request()->is('admin/product/*') ? 'sub-menu-opened' : ''}} product-management">
                     <a href="#" class="{{request()->is('admin/product/*') ? 'active-menu' : ''}}">
-                        <span class="material-icons" title="{{translate('Products')}}">list</span>
-                        <span class="link-title">{{translate('Products')}}</span>
+                        <span class="material-icons" title="{{translate('products')}}">list</span>
+                        <span class="link-title">{{translate('products')}}</span>
                     </a>
                     <ul class="nav sub-menu">
                         <li>
@@ -310,6 +301,25 @@ $logo = business_config('business_logo', 'business_information');
             @endif
             {{-- <pre>{{ print_r($userPermissions) }}</pre> --}}
 
+                        <!-- Transaction Management Section -->
+                        @if(auth()->user()->user_type == 'super-admin' || in_array('product_management', $userPermissions) &&  in_array('requests', $userPermissions))
+                        <li class="nav-category transaction-management" title="{{translate('transaction_management')}}">
+                            {{translate('transaction_management')}}
+                        </li>
+                        <li class="has-sub-item {{request()->is('admin/transaction/*') ? 'sub-menu-opened' : ''}} transaction-management">
+                            <a href="#" class="{{request()->is('admin/transaction/*') ? 'active-menu' : ''}}">
+                                <span class="material-icons" title="Transactions">attach_money</span>
+                                <span class="link-title">{{translate('transactions')}}</span>
+                            </a>
+                            <ul class="nav sub-menu">
+                                <li><a href="{{route('admin.transaction.list', ['trx_type' => 'all'])}}"
+                                       class="{{request()->is('admin/transaction/list') ? 'active-menu' : ''}}">
+                                       {{translate('All Transactions')}}
+                                </a></li>
+                            </ul>
+                        </li>
+                    @endif
+
             @if(access_checker('promotion_management'))
                 <li class="nav-category" title="{{translate('promotion_management')}}">
                     {{translate('promotion_management')}}
@@ -369,22 +379,22 @@ $logo = business_config('business_logo', 'business_information');
     .service-management, .booking-management, .driver-management, .transaction-management {
         display: none;
     }
-    @if(in_array('service_management', $userPermissions) || auth()->user()->user_type == 'provider-admin' || auth()->user()->user_type == 'super-admin')
+    @if(in_array('service_management', $userPermissions) || auth()->user()->user_type == 'super-admin')
         .service-management {
             display: block;
         }
     @endif
-    @if(in_array('booking_management', $userPermissions) || auth()->user()->user_type == 'provider-admin' || auth()->user()->user_type == 'super-admin')
+    @if(in_array('booking_management', $userPermissions) || auth()->user()->user_type == 'super-admin')
         .booking-management {
             display: block;
         }
     @endif
-    @if(in_array('driver_management', $userPermissions) || auth()->user()->user_type == 'provider-admin' || auth()->user()->user_type == 'super-admin')
+    @if(in_array('driver_management', $userPermissions) || auth()->user()->user_type == 'super-admin')
         .driver-management {
             display: block;
         }
     @endif
-    @if(in_array('transaction_management', $userPermissions) || auth()->user()->user_type == 'provider-admin' || auth()->user()->user_type == 'super-admin')
+    @if(in_array('transaction_management', $userPermissions) || auth()->user()->user_type == 'super-admin')
         .transaction-management {
             display: block;
         }

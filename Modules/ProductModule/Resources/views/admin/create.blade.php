@@ -42,7 +42,7 @@
                                 <div class="row">
                                     <h4 class="c1 mb-20">{{translate('general_information')}}</h4>
                                     <div class="col-md-6">
-                                        <div class="form-floating form-floating__icon mb-30">
+                                        <div class="form-floating form-floating__icon mb-30 lang_input" id="default-name">
                                             <input type="text" class="form-control" name="name[default]"
                                                    placeholder="{{translate('product_name')}}"
                                                    value="{{old('name.default')}}" required>
@@ -63,7 +63,7 @@
                                     </div>
                                     <h4 class="c1 mb-20">{{translate('Description')}}</h4>
                                     <div class="col-md-12">
-                                        <div class="form-floating mb-30">
+                                        <div class="form-floating mb-30 lang_input" id="default-description">
                                             <textarea class="form-control" id="description-default" name="description[default]"
                                                       placeholder="{{translate('Description')}}">{{old('description.default')}}</textarea>
                                         </div>
