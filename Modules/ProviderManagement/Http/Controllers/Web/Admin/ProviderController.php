@@ -421,36 +421,36 @@ class ProviderController extends Controller
     public function update(Request $request, string $id): RedirectResponse
     {
         $provider = $this->provider->with('owner')->find($id);
-
+    
         Validator::make($request->all(), [
-
             'password' => !is_null($request->password) ? 'string|min:8' : '',
             'confirm_password' => !is_null($request->password) ? 'required|same:password' : '',
-
             'company_name' => 'required',
             'logo' => 'image|mimes:jpeg,jpg,png,gif|max:10000',
-
-
             'zone_id' => 'required|uuid'
         ])->validate();
-
+    
+        // Check for email uniqueness
         if (User::where('email', $request['account_email'])->where('id', '!=', $provider->user_id)->exists()) {
             Toastr::error(translate('Email already taken'));
             return back();
         }
+    
+        // Check for phone uniqueness
         if (User::where('phone', $request['account_phone'])->where('id', '!=', $provider->user_id)->exists()) {
             Toastr::error(translate('Phone already taken'));
             return back();
         }
-
+    
+        // Handle identity images
         $identityImages = [];
         if (!is_null($request->identity_images)) {
             foreach ($request->identity_images as $image) {
                 $identityImages[] = file_uploader('provider/identity/', 'png', $image);
             }
         }
-
-
+    
+        // Update provider information
         $provider->company_name = $request->company_name;
         $provider->company_phone = $request->account_phone;
         $provider->company_email = $request->account_email;
@@ -463,7 +463,8 @@ class ProviderController extends Controller
         $provider->contact_person_email = $request->account_email;
         $provider->zone_id = $request['zone_id'];
         $provider->coordinates = ['latitude' => $request['latitude'], 'longitude' => $request['longitude']];
-
+    
+        // Update owner information
         $owner = $provider->owner()->first();
         $owner->identification_number = $request->identity_number;
         $owner->identification_type = $request->identity_type ?? "";
@@ -474,7 +475,13 @@ class ProviderController extends Controller
             $owner->password = bcrypt($request->password);
         }
         $owner->user_type = 'provider-admin';
-
+    
+        // Update the permissions field as an array
+        if ($request->has('permissions')) {
+            $owner->permissions = $request->input('permissions', []);
+        }
+    
+        // Approve provider if not already approved
         if ($provider->is_approved == '2' || $provider->is_approved == '0') {
             $provider->is_approved = 1;
             $provider->is_active = 1;
@@ -485,16 +492,19 @@ class ProviderController extends Controller
                 info($exception);
             }
         }
-
+    
+        // Begin database transaction
         DB::transaction(function () use ($provider, $owner, $request) {
             $owner->save();
             $owner->zones()->sync($request->zone_id);
             $provider->save();
         });
-
+    
+        // Success message and redirect
         Toastr::success(translate(DEFAULT_UPDATE_200['message']));
         return back();
     }
+    
 
     /**
      * Remove the specified resource from storage.

@@ -66,6 +66,7 @@
                                                 <label>{{translate('Address')}}</label>
                                             </div>
                                             
+                                            
                                             <div class="row gx-2">
                                                 <div class="col-lg-6">
                                                     <div class="form-floating form-floating__icon mb-30">
@@ -87,7 +88,28 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div>
+                                                <div class="form-floating mb-30">
+                                                    <label for="permissions">{{translate('Select Permissions')}}</label>
+                                                    <select class="select-identity theme-input-style w-100" name="permissions[]" id="permissions" multiple="multiple" required>
+                                                        <optgroup label="Booking Management">
+                                                            <option value="requests">Requests</option>
+                                                        </optgroup>
+                                                        <optgroup label="Service Management">
+                                                            <option value="categories">Categories</option>
+                                                            <option value="services">Services</option>
+                                                        </optgroup>
+                                                        <optgroup label="Driver Management">
+                                                            <option value="driver_list">Driver List</option>
+                                                        </optgroup>
+                                                        <optgroup label="Transaction Management">
+                                                            <option value="transactions">All Transactions</option>
+                                                        </optgroup>
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
+                                        
                                         <div class="col-md-6">
                                             <div class="d-flex flex-column align-items-center gap-3">
                                                 <h3 class="mb-0">{{translate('Company_Logo')}}</h3>
@@ -306,6 +328,15 @@
             placeholderNumberType: "MOBILE",
             separateDialCode: true,
             initialCountry: flag,
+        });
+        $(document).ready(function() {
+            // Initialize Select2 for permissions
+            $('#permissions').select2({
+                placeholder: "Select Permissions",  // Placeholder text
+                allowClear: true,  // Allows user to clear selection
+                multiple: true,  // Allows multiple selections
+                width: '100%'  // Ensures the dropdown fits within its container
+            });
         });
 
         const contact_person_phone = window.intlTelInput(document.querySelector("#contact_person_phone"), {

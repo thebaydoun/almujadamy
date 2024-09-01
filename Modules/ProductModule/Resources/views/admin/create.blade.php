@@ -141,7 +141,7 @@
 <script src="{{asset('public/assets/admin-module/plugins/select2/select2.min.js')}}"></script>
 
 <script>
-    "use strict"
+    "use strict" 
 
     $('#zone_selector__select').on('change', function() {
         var selectedValues = $(this).val();
