@@ -169,9 +169,11 @@
 
     <script>
         "use strict"
-        var options = {
-            labels: ['pending', 'accepted', 'ongoing', 'completed', 'canceled'],
-            series: {{json_encode($total)}},
+        console.log({{json_encode($total)}});
+        
+        var options = {            
+            labels: ['completed', 'canceled'], // Only 'completed' and 'canceled'
+            series: [{{$total[0]}}, {{$total[2]}}], // Only include the values for completed and canceled
             chart: {
                 width: 235,
                 height: 160,

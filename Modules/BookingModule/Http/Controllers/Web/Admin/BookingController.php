@@ -117,7 +117,6 @@ class BookingController extends Controller
         $zones = $this->zone->withoutGlobalScope('translate')->select('id', 'name')->get();
         $categories = $this->category->select('id', 'parent_id', 'name')->where('position', 1)->get();
         $subCategories = $this->category->select('id', 'parent_id', 'name')->where('position', 2)->get();
-
         return view('bookingmodule::admin.booking.list', compact('bookings', 'zones', 'categories', 'subCategories', 'queryParams', 'filterCounter'));
     }
 
@@ -349,7 +348,6 @@ class BookingController extends Controller
             }, 'detail.service.category', 'detail.service.subCategory', 'detail.variation', 'customer', 'provider', 'service_address', 'serviceman', 'service_address', 'status_histories.user'])->find($id);
 
             $servicemen = $this->serviceman->with(['user'])
-                ->where('provider_id', $booking?->provider_id)
                 ->whereHas('user', function ($query) {
                     $query->ofStatus(1);
                 })

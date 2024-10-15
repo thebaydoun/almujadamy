@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\CategoryManagement\Entities\Category;
 use Illuminate\Support\Facades\DB;
 use Modules\ProductModule\Entities\Product;
 use Modules\BusinessSettingsModule\Entities\Translation;
@@ -20,9 +21,10 @@ class ProductController extends Controller
 {
     private Product $product;
 
-    public function __construct(Product $product)
+    public function __construct(Product $product, Category $category)
     {
         $this->product = $product;
+        $this->category = $category;
     }
 
     public function index(Request $request): View|Factory|Application
@@ -50,13 +52,17 @@ class ProductController extends Controller
 
     public function create(): View|Factory|Application
     {
-        return view('productmodule::admin.create');
+        $categories = $this->category->ofStatus(1)->ofType('main')->latest()->get();
+        return view('productmodule::admin.create', compact('categories'));
     }
 
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name.default' => 'required|unique:products,name',
+            'name' => 'required|max:191',
+            'name.0' => 'required|max:191',
+            'description' => 'required',
+            'description.0' => 'required',
             'image' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:10240',
             'price' => 'required|numeric',
             'cost' => 'required|numeric',  // Validate the cost field
@@ -65,88 +71,167 @@ class ProductController extends Controller
 
         DB::transaction(function () use ($request) {
             $product = new Product();
-            $product->name = $request->name['default'];
-            $product->description = $request->description['default'];
+            $product->name = $request->name[array_search('default', $request->lang)];
+            $product->description = $request->description[array_search('default', $request->lang)];
+            $product->category_id = $request->category_id;
+            $product->sub_category_id = $request->sub_category_id;
             $product->price = $request->price;
             $product->cost = $request->cost;  // Store the cost field
             $product->quantity = $request->quantity;
-
-            if ($request->hasFile('image')) {
-                $product->image = $request->file('image')->store('products', 'public');
-            }
-
+            $product->image = file_uploader('products/', 'png', $request->file('image'));
             $product->save();
 
-            $defaultLanguage = str_replace('_', '-', app()->getLocale());
-            $data = [];
-            if (is_array($request->name)) {
-                foreach ($request->name as $lang => $value) {
-                    if ($lang != 'default') {
-                        $data[] = array(
-                            'translationable_type' => Product::class,
-                            'translationable_id' => $product->id,
-                            'locale' => $lang,
-                            'key' => 'name',
-                            'value' => $value,
+            $defaultLang = str_replace('_', '-', app()->getLocale());
+
+            foreach ($request->lang as $index => $key) {
+                if ($defaultLang == $key && !($request->name[$index])) {
+                    if ($key != 'default') {
+                        Translation::updateOrInsert(
+                            [
+                                'translationable_type' => 'Modules\ProductModule\Entities\Product',
+                                'translationable_id' => $product->id,
+                                'locale' => $key,
+                                'key' => 'name'],
+                            ['value' => $product->name]
+                        );
+                    }
+                } else {
+    
+                    if ($request->name[$index] && $key != 'default') {
+                        Translation::updateOrInsert(
+                            [
+                                'translationable_type' => 'Modules\ProductModule\Entities\Product',
+                                'translationable_id' => $product->id,
+                                'locale' => $key,
+                                'key' => 'name'],
+                            ['value' => $request->name[$index]]
+                        );
+                    }
+                }
+    
+                if ($defaultLang == $key && !($request->description[$index])) {
+                    if ($key != 'default') {
+                        Translation::updateOrInsert(
+                            [
+                                'translationable_type' => 'Modules\ProductModule\Entities\Product',
+                                'translationable_id' => $product->id,
+                                'locale' => $key,
+                                'key' => 'description'],
+                            ['value' => $product->description]
+                        );
+                    }
+                } else {
+    
+                    if ($request->description[$index] && $key != 'default') {
+                        Translation::updateOrInsert(
+                            [
+                                'translationable_type' => 'Modules\ProductModule\Entities\Product',
+                                'translationable_id' => $product->id,
+                                'locale' => $key,
+                                'key' => 'description'],
+                            ['value' => $request->description[$index]]
                         );
                     }
                 }
             }
-            if (count($data)) {
-                Translation::insert($data);
-            }
         });
 
-        Toastr::success('Product created successfully');
-        return redirect()->route('admin.product.index');
+        Toastr::success(translate(SERVICE_STORE_200['message']));
+        return back();
     }
 
     public function edit(string $id): View|Factory|Application|RedirectResponse
     {
-        $product = $this->product->find($id);
+        // $product = $this->product->find($id);
+        $product = $this->product->withoutGlobalScope('translate')->where('id', $id)->first();
         if (!$product) {
             Toastr::error('Product not found');
             return back();
         }
-        return view('productmodule::admin.edit', compact('product'));
+        $categories = $this->category->ofStatus(1)->ofType('main')->latest()->get();
+        return view('productmodule::admin.edit', compact('product', 'categories'));
     }
 
     public function update(Request $request, string $id): JsonResponse|RedirectResponse
     {
         $request->validate([
-            'name.default' => 'required|unique:products,name,' . $id,
+            'name' => 'required|max:191',
+            'name.0' => 'required|max:191',
+            'description' => 'required',
+            'description.0' => 'required',
             'image' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:10240',
             'price' => 'required|numeric',
             'cost' => 'required|numeric',  // Validate the cost field
             'quantity' => 'required|integer',
         ]);
 
-        $product = Product::findOrFail($id);
-        $product->name = $request->name['default'];
-        $product->description = $request->description['default'];
+        $product = $this->product->find($id);
+        if (!isset($product)) {
+            return response()->json(response_formatter(DEFAULT_204), 200);
+        }
+        $product->name = $request->name[array_search('default', $request->lang)];
+        $product->category_id = $request->category_id;
+        $product->sub_category_id = $request->sub_category_id;
+        $product->description = $request->description[array_search('default', $request->lang)];
         $product->price = $request->price;
         $product->cost = $request->cost;  // Update the cost field
         $product->quantity = $request->quantity;
 
-        if ($request->hasFile('image')) {
-            $product->image = $request->file('image')->store('products', 'public');
+        if ($request->has('image')) {
+            $product->image = file_uploader('products/', 'png', $request->file('image'));
         }
 
         $product->save();
 
-        $defaultLanguage = str_replace('_', '-', app()->getLocale());
-        $data = [];
-        if (is_array($request->name)) {
-            foreach ($request->name as $lang => $value) {
-                if ($lang != 'default') {
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+
+        foreach ($request->lang as $index => $key) {
+            if ($defaultLang == $key && !($request->name[$index])) {
+                if ($key != 'default') {
                     Translation::updateOrInsert(
                         [
-                            'translationable_type' => Product::class,
+                            'translationable_type' => 'Modules\ProductModule\Entities\Product',
                             'translationable_id' => $product->id,
-                            'locale' => $lang,
-                            'key' => 'name'
-                        ],
-                        ['value' => $value]
+                            'locale' => $key,
+                            'key' => 'name'],
+                        ['value' => $product->name]
+                    );
+                }
+            } else {
+
+                if ($request->name[$index] && $key != 'default') {
+                    Translation::updateOrInsert(
+                        [
+                            'translationable_type' => 'Modules\ProductModule\Entities\Product',
+                            'translationable_id' => $product->id,
+                            'locale' => $key,
+                            'key' => 'name'],
+                        ['value' => $request->name[$index]]
+                    );
+                }
+            }
+
+            if ($defaultLang == $key && !($request->description[$index])) {
+                if ($key != 'default') {
+                    Translation::updateOrInsert(
+                        [
+                            'translationable_type' => 'Modules\ProductModule\Entities\Product',
+                            'translationable_id' => $product->id,
+                            'locale' => $key,
+                            'key' => 'description'],
+                        ['value' => $product->description]
+                    );
+                }
+            } else {
+
+                if ($request->description[$index] && $key != 'default') {
+                    Translation::updateOrInsert(
+                        [
+                            'translationable_type' => 'Modules\ProductModule\Entities\Product',
+                            'translationable_id' => $product->id,
+                            'locale' => $key,
+                            'key' => 'description'],
+                        ['value' => $request->description[$index]]
                     );
                 }
             }

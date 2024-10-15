@@ -29,6 +29,7 @@ use function file_remover;
 use function file_uploader;
 use function response;
 use function response_formatter;
+use Modules\UserManagement\Entities\Serviceman;
 
 class DriverController extends Controller
 {
@@ -36,12 +37,14 @@ class DriverController extends Controller
     protected UserAddress $address;
     protected Role $role;
     protected Zone $zone;
+    private Serviceman $serviceman;
 
-    public function __construct(User $employee, UserAddress $address, Role $role, Zone $zone)
+    public function __construct(User $employee, UserAddress $address, Role $role, Serviceman $serviceman, Zone $zone)
     {
         $this->employee = $employee;
         $this->address = $address;
         $this->role = $role;
+        $this->serviceman = $serviceman;
         $this->zone = $zone;
     }
 
@@ -147,6 +150,11 @@ class DriverController extends Controller
             $address->user_id = $employee->id;
             $address->address = $request->address;
             $address->save();
+            
+            $serviceman = $this->serviceman;
+            $serviceman->provider_id = "c76b6a17-dbe5-4efb-bfee-3d33d2ded36f";
+            $serviceman->user_id = $employee->id;
+            $serviceman->save();
         });
 
         Toastr::success(translate(DEFAULT_STORE_200['message']));
@@ -230,6 +238,13 @@ class DriverController extends Controller
             $address = $this->address->where('user_id', $id)->first();
             $address->address = $request->address;
             $address->save();
+            
+            
+            
+            $serviceman = $this->serviceman->where('user_id', $id)->first();
+            $serviceman->provider_id = "c76b6a17-dbe5-4efb-bfee-3d33d2ded36f";
+            $serviceman->user_id = $employee->id;
+            $serviceman->save();
         });
 
         Toastr::success(translate(DEFAULT_UPDATE_200['message']));

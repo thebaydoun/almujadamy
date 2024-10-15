@@ -71,7 +71,6 @@ class CustomerController extends Controller
             ->when($status != 'all', function ($query) use ($request) {
                 return $query->ofStatus(($request['status'] == 'active') ? 1 : 0);
             })->latest()->paginate(pagination_limit())->appends($queryParam);
-
         return view('customermodule::admin.list', compact('customers', 'search', 'status'));
     }
 

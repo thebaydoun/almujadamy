@@ -100,6 +100,8 @@
                                                 <th>{{translate('Customer_Name')}}</th>
                                                 <th class="text-center">{{translate('Contact_Info')}}</th>
                                                 <th class="text-center">{{translate('Total_Bookings')}}</th>
+                                                <th class="text-center">{{translate('boat_name')}}</th>
+                                                <th class="text-center">{{translate('boat_number')}}</th>
                                                 <th class="text-center">{{translate('Joined')}}</th>
                                                 <th class="text-center">{{translate('status')}}</th>
                                                 <th class="text-center">{{translate('action')}}</th>
@@ -133,6 +135,8 @@
                                                         </div>
                                                     </td>
                                                     <td class="text-center">{{$customer->bookings_count}}</td>
+                                                    <td class="text-center">{{$customer->boat_name}}</td>
+                                                    <td class="text-center">{{$customer->boat_number}}</td>
                                                     <td class="text-center">{{date('d M, Y',strtotime($customer->created_at))}}</td>
                                                     <td>
                                                         <label class="switcher mx-auto" data-bs-toggle="modal"

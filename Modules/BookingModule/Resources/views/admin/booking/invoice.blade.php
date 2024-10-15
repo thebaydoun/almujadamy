@@ -141,7 +141,7 @@
                     <div class="col company-details">
                         <a target="_blank" href="#">
                             @php($logo = business_config('business_logo','business_information'))
-                            <img width="84" height="17" src="{{asset('storage/app/public/business')}}/{{$logo->live_values}}"
+                            <img width="75" src="{{asset('storage/app/public/business')}}/{{$logo->live_values}}"
                                  data-holder-rendered="true"/>
                         </a>
                         @php($business_email = business_config('business_email','business_information'))
@@ -261,11 +261,11 @@
                             <td class="">{{translate('Coupon_Discount')}} </td>
                             <td>- {{with_currency_symbol($booking->total_coupon_discount_amount)}}</td>
                         </tr>
-                        <tr>
+                        {{-- <tr>
                             <td colspan="3"></td>
                             <td class="">{{translate('Vat_/_Tax')}} (%)</td>
                             <td>+ {{with_currency_symbol($booking->total_tax_amount)}}</td>
-                        </tr>
+                        </tr> --}}
                         @if ($booking->extra_fee > 0)
                             @php($additional_charge_label_name = business_config('additional_charge_label_name', 'booking_setup')->live_values??'Fee')
                             <tr>

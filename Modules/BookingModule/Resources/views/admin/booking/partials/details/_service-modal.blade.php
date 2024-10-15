@@ -109,7 +109,7 @@
                                         <input type="number" min="1" name="qty[]" class="form-control qty-width"
                                                id="qty-{{$detail?->variant_key}}" value="{{$detail->quantity}}"
                                                oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-                                               readonly>
+                                               >
                                     </td>
                                     <td id="discount-amount-{{$detail?->variant_key}}">{{$detail->discount_amount}}</td>
                                     <td id="total-cost-{{$detail?->variant_key}}">{{$detail->total_cost}}</td>

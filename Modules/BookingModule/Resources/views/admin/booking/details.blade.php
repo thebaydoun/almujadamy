@@ -451,12 +451,12 @@
                             </div>
 
                             <div class="mt-3">
-                                @if($booking->booking_status != 'pending')
+                                
                                     <select class="js-select" id="booking_status">
                                         <option value="0">{{translate('Select Booking Status')}}</option>
                                         <option
-                                            value="0"
-                                            disabled {{$booking['booking_status'] == 'accepted' ? 'selected' : ''}}>{{translate('Accepted')}}</option>
+                                            value="accepted"
+                                             {{$booking['booking_status'] == 'accepted' ? 'selected' : ''}}>{{translate('Accepted')}}</option>
                                         <option
                                             value="ongoing" {{$booking['booking_status'] == 'ongoing' ? 'selected' : ''}}>{{translate('Ongoing')}}</option>
                                         <option
@@ -464,7 +464,7 @@
                                         <option
                                             value="canceled" {{$booking['booking_status'] == 'canceled' ? 'selected' : ''}}>{{translate('Canceled')}}</option>
                                     </select>
-                                @endif
+                                
                             </div>
 
                             <div class="mt-3">
@@ -595,7 +595,7 @@
                                     </div>
                                 </div>
 
-                                <div class="c1-light-bg radius-10 provider-information">
+                                {{-- <div class="c1-light-bg radius-10 provider-information">
                                     <div
                                         class="border-bottom d-flex align-items-center justify-content-between gap-2 py-3 px-4 mb-2">
                                         <h4 class="d-flex align-items-center gap-2">
@@ -679,7 +679,7 @@
                                             <p class="text-muted text-center fw-medium mb-3">{{translate('No Provider Information')}}</p>
                                         </div>
                                     @endif
-                                </div>
+                                </div> --}}
 
                                 <div class="c1-light-bg radius-10 serviceman-information">
                                     <div

@@ -27,9 +27,7 @@
 
     <link href="{{asset('public/assets/admin-module')}}/css/material-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="{{asset('public/assets/admin-module')}}/css/bootstrap.min.css"/>
-    <link rel="stylesheet"
-          href="{{asset('public/assets/admin-module')}}/plugins/perfect-scrollbar/perfect-scrollbar.min.css"/>
-
+    <link rel="stylesheet" href="{{asset('public/assets/admin-module')}}/plugins/perfect-scrollbar/perfect-scrollbar.min.css"/>
 
     <link rel="stylesheet" href="{{asset('public/assets/admin-module')}}/plugins/apex/apexcharts.css"/>
     <link rel="stylesheet" href="{{asset('public/assets/admin-module')}}/plugins/select2/select2.min.css"/>
@@ -46,6 +44,18 @@
 <script>
     localStorage.theme && document.querySelector('body').setAttribute("theme", localStorage.theme);
 </script>
+
+<script>
+    // Add a class to the body before printing
+    window.addEventListener('beforeprint', () => {
+      document.body.classList.add('aside-folded');
+    });
+
+    // Remove the class from the body after printing
+    window.addEventListener('afterprint', () => {
+      document.body.classList.remove('aside-folded');
+    });
+  </script>
 
 <div class="offcanvas-overlay"></div>
 

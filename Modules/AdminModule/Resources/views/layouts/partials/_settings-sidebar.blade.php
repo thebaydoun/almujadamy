@@ -1,4 +1,4 @@
-<div class="settings-sidebar shadow">
+{{-- <div class="settings-sidebar shadow">
     <div class="settings-toggle-icon">
         <span class="material-icons">settings</span>
     </div>
@@ -21,4 +21,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}

@@ -13,6 +13,7 @@ $pending_booking_count = \Modules\BookingModule\Entities\Booking::where('booking
         });
     })
     ->count();
+    $userPermissions = json_decode(auth()->user()->permissions, true) ?? [];
 
 $offline_booking_count = \Modules\BookingModule\Entities\Booking::whereIn('booking_status', ['pending', 'accepted'])
     ->where('payment_method', 'offline_payment')->where('is_paid', 0)->count();
@@ -150,37 +151,72 @@ $logo = business_config('business_logo', 'business_information');
                 </li>
             @endif
 
+            @if(access_checker('report_management'))
+            <li class="nav-category" title="{{translate('report_management')}}">
+                {{translate('Reports & Analytics')}}
+            </li>
+            <li class="has-sub-item {{request()->is('admin/report/*')?'sub-menu-opened':''}}">
+                <a href="#" class="{{request()->is('admin/report/*')?'active-menu':''}}">
+                    <span class="material-icons" title="Customers">event_note</span>
+                    <span class="link-title">{{translate('Reports')}}</span>
+                </a>
+                <ul class="nav sub-menu">
+                    <li>
+                        <a href="{{route('admin.report.transaction', ['transaction_type'=>'all'])}}"
+                           class="{{request()->is('admin/report/transaction')?'active-menu':''}}">
+                            {{translate('Transaction Reports')}}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{route('admin.report.business.overview')}}"
+                           class="{{request()->is('admin/report/business*')?'active-menu':''}}">
+                            {{translate('Business Reports')}}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{route('admin.report.booking')}}"
+                           class="{{request()->is('admin/report/booking')?'active-menu':''}}">
+                            {{translate('Booking Reports')}}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{route('admin.report.provider')}}"
+                           class="{{request()->is('admin/report/provider')?'active-menu':''}}">
+                            {{translate('Provider Reports')}}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="has-sub-item {{request()->is('admin/analytics/*')?'sub-menu-opened':''}}">
+                <a href="#" class="{{request()->is('admin/analytics/*')?'active-menu':''}}">
+                    <span class="material-icons" title="Customers">analytics</span>
+                    <span class="link-title">{{translate('Analytics')}}</span>
+                </a>
+                <ul class="nav sub-menu">
+                    <li>
+                        <a href="{{route('admin.analytics.search.keyword')}}"
+                           class="{{request()->is('admin/analytics/search/keyword')?'active-menu':''}}">
+                            {{translate('Keyword_Search')}}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{route('admin.analytics.search.customer')}}"
+                           class="{{request()->is('admin/analytics/search/customer')?'active-menu':''}}">
+                            {{translate('Customer_Search')}}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        @endif
+        
             <!-- Service Management Section -->
-            @if((auth()->user()->user_type == 'super-admin') || auth()->user()->user_type == 'provider-admin' &&
-                (in_array('categories', $userPermissions) || in_array('services', $userPermissions)))
+            @if((auth()->user()->user_type == 'super-admin') || auth()->user()->user_type == 'provider-admin' && in_array('services', $userPermissions))
                 <li class="nav-category service-management" title="{{translate('service_management')}}">
                     {{translate('service_management')}}
                 </li>
-               
-                    <li class="has-sub-item {{(request()->is('admin/category/')  ||  request()->is('admin/sub-category/'))?'sub-menu-opened':''}} service-management">
-                        <a href="#"
-                           class="{{(request()->is('admin/category/') || request()->is('admin/sub-category/'))?'active-menu':''}}">
-                            <span class="material-icons" title="Service Categories">category</span>
-                            <span class="link-title">{{translate('Categories')}}</span>
-                        </a>
-                        <ul class="nav sub-menu">
-                            <li>
-                                <a href="{{route('admin.category.create')}}"
-                                   class="{{request()->is('admin/category/*')?'active-menu':''}}">
-                                    {{translate('Category Setup')}}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{route('admin.sub-category.create')}}"
-                                   class="{{request()->is('admin/sub-category/*')?'active-menu':''}}">
-                                    {{translate('Sub Category Setup')}}
-                                </a>
-                            </li>
-                            
-                        </ul>
-                    </li>
 
-                @if(in_array('services', $userPermissions) || auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'super-admin')
+                @if(in_array('services', $userPermissions) || auth()->user()->user_type == 'provider-admin' || auth()->user()->user_type == 'super-admin')
                     <li class="has-sub-item {{request()->is('admin/service/') || request()->is('admin/vendor/') ?'sub-menu-opened':''}} service-management">
                         <a href="#" class="{{request()->is('admin/service/*')?'active-menu':''}}">
                             <span class="material-icons" title="Services">design_services</span>
@@ -229,9 +265,31 @@ $logo = business_config('business_logo', 'business_information');
                 </li>
             @endif
 
-            @if(auth()->user()->user_type == 'super-admin' || in_array('product_management', $userPermissions) &&  in_array('requests', $userPermissions))
+            @if(auth()->user()->user_type == 'admin-employee' || auth()->user()->user_type == 'super-admin' || in_array('product_management', $userPermissions) &&  (in_array('categories', $userPermissions) || in_array('requests', $userPermissions)))
                 <li class="nav-category product-management" title="{{translate('product_management')}}">
                     {{translate('product_management')}}
+                </li>
+                <li class="has-sub-item {{(request()->is('admin/category/')  ||  request()->is('admin/sub-category/'))?'sub-menu-opened':''}} service-management">
+                    <a href="#"
+                       class="{{(request()->is('admin/category/') || request()->is('admin/sub-category/'))?'active-menu':''}}">
+                        <span class="material-icons" title="Service Categories">category</span>
+                        <span class="link-title">{{translate('Categories')}}</span>
+                    </a>
+                    <ul class="nav sub-menu">
+                        <li>
+                            <a href="{{route('admin.category.create')}}"
+                               class="{{request()->is('admin/category/*')?'active-menu':''}}">
+                                {{translate('Category Setup')}}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.sub-category.create')}}"
+                               class="{{request()->is('admin/sub-category/*')?'active-menu':''}}">
+                                {{translate('Sub Category Setup')}}
+                            </a>
+                        </li>
+                        
+                    </ul>
                 </li>
                 <li class="has-sub-item {{request()->is('admin/product/*') ? 'sub-menu-opened' : ''}} product-management">
                     <a href="#" class="{{request()->is('admin/product/*') ? 'active-menu' : ''}}">
@@ -249,12 +307,6 @@ $logo = business_config('business_logo', 'business_information');
                             <a href="{{route('admin.product.create')}}"
                                class="{{request()->is('admin/product/create') ? 'active-menu':''}}">
                                 {{translate('Add New Product')}}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{route('admin.product.index')}}"
-                               class="{{request()->is('admin/product/sub-category') ? 'active-menu':''}}">
-                                {{translate('Product Sub Categories')}}
                             </a>
                         </li>
                     </ul>

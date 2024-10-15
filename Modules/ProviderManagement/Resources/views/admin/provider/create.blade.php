@@ -90,20 +90,20 @@
                                         <!-- Permissions Selection -->
                                         <div>
                                             <div class="form-floating mb-30">
-                                                <label for="permissions">{{translate('Select Permissions')}}</label>
+                                                {{-- <label for="permissions">{{translate('Select_Permissions')}}</label> --}}
                                                 <select class="select-identity theme-input-style w-100" name="permissions[]" id="permissions" multiple="multiple" required>
-                                                    <optgroup label="Booking Management">
-                                                        <option value="requests">Requests</option>
+                                                    <optgroup label="{{translate('Booking Management')}}">
+                                                        <option value="requests">{{translate('Requests')}}</option>
                                                     </optgroup>
-                                                    <optgroup label="Service Management">
-                                                        <option value="categories">Categories</option>
-                                                        <option value="services">Services</option>
+                                                    <optgroup label="{{translate('Service Management')}}">
+                                                        <option value="categories">{{translate('Categories')}}</option>
+                                                        <option value="services">{{translate('Services')}}</option>
                                                     </optgroup>
-                                                    <optgroup label="Driver Management">
-                                                        <option value="driver_list">Driver List</option>
+                                                    <optgroup label="{{translate('Driver Management')}}">
+                                                        <option value="driver_list">{{translate('Driver List')}}</option>
                                                     </optgroup>
-                                                    <optgroup label="Transaction Management">
-                                                        <option value="transactions">All Transactions</option>
+                                                    <optgroup label="{{translate('Transaction Management')}}">
+                                                        <option value="transactions">{{translate('All Transactions')}}</option>
                                                     </optgroup>
                                                 </select>
                                             </div>
@@ -176,7 +176,7 @@
         $(document).ready(function() {
             // Initialize Select2 for permissions
             $('#permissions').select2({
-                placeholder: "Select Permissions",  // Placeholder text
+                placeholder: "{{translate('Select_Permissions')}}",  // Placeholder text
                 allowClear: true,  // Allows user to clear selection
                 multiple: true,  // Allows multiple selections
                 width: '100%'  // Ensures the dropdown fits within its container
