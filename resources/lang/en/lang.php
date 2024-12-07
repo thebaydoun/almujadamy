@@ -243,7 +243,7 @@
   'image_format_-_jpg,_png,_jpeg,_gif_image
                                                 size_-_
                                                 maximum_size_2_MB_Image_Ratio_-_1:1' => 'Image format - jpg  png  jpeg  gif image
-                                                size -
+                                                size - 
                                                 maximum size 2 MB Image Ratio - 1:1',
   'all' => 'All',
   'total_categories' => 'Total categories',
@@ -276,15 +276,15 @@
   'add_variant' => 'Add variant',
   'already_exist' => 'Already exist',
   'Image format - jpg, png,
-                                                        jpeg, gif Image Size - maximum size 2 MB Image Ratio - 3:1' => 'Image format - jpg  png
+                                                        jpeg, gif Image Size - maximum size 2 MB Image Ratio - 3:1' => 'Image format - jpg  png 
                                                         jpeg  gif Image Size - maximum size 2 MB Image Ratio - 3:1',
   'cover_image' => 'Cover image',
   'Image format - jpg, png,
                                                         jpeg,
                                                         gif Image
                                                         Size -
-                                                        maximum size 2 MB Image Ratio - 1:1' => 'Image format - jpg  png
-                                                        jpeg
+                                                        maximum size 2 MB Image Ratio - 1:1' => 'Image format - jpg  png 
+                                                        jpeg 
                                                         gif Image
                                                         Size -
                                                         maximum size 2 MB Image Ratio - 1:1',
@@ -3734,21 +3734,18 @@ _Message' => 'Customer notification for provider bid offer
                                                     jpeg, gif Image Size - maximum size 2 MB Image Ratio - 3:1' => 'Image format - jpg  png 
                                                     jpeg  gif Image Size - maximum size 2 MB Image Ratio - 3:1',
   'product_information' => 'Product information',
+  'payment status updated successfully' => 'Payment status updated successfully',
   'Image format - jpg, png,
-                                                        jpeg,
-                                                        gif Image
-                                                        Size -
-                                                        maximum size 2 MB Image Ratio - 1:1' => 'Image format - jpg  png 
-                                                        jpeg 
-                                                        gif Image
-                                                        Size -
-                                                        maximum size 2 MB Image Ratio - 1:1',
+                                                    jpeg,
+                                                    gif Image
+                                                    Size -
+                                                    maximum size 2 MB Image Ratio - 1:1' => 'Image format - jpg  png 
+                                                    jpeg 
+                                                    gif Image
+                                                    Size -
+                                                    maximum size 2 MB Image Ratio - 1:1',
   'Image format - jpg, png,
-                                                        jpeg, gif Image Size - maximum size 2 MB Image Ratio - 3:1' => 'Image format - jpg  png 
-                                                        jpeg  gif Image Size - maximum size 2 MB Image Ratio - 3:1',
-  'image_format_-_jpg,_png,_jpeg,_gif_image
-                                                size_-_
-                                                maximum_size_2_MB_Image_Ratio_-_1:1' => 'Image format - jpg  png  jpeg  gif image
-                                                size - 
-                                                maximum size 2 MB Image Ratio - 1:1',
+                                                jpeg, gif Image Size - maximum size 2 MB Image Ratio - 1:1' => 'Image format - jpg  png 
+                                                jpeg  gif Image Size - maximum size 2 MB Image Ratio - 1:1',
+  'referral code is invalid' => 'Referral code is invalid',
 );

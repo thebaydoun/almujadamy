@@ -3588,4 +3588,16 @@
   'Image format - jpg, png,
                                                                     jpeg, gif Image Size - maximum size 2 MB Image Ratio -
                                                                     1:1' => 'تنسيق الصورة - jpg، png، jpeg، gif حجم الصورة - الحد الأقصى للحجم 2 ميجابايت نسبة الصورة - 1:1',
+  'Image format - jpg, png,
+                                                    jpeg,
+                                                    gif Image
+                                                    Size -
+                                                    maximum size 2 MB Image Ratio - 1:1' => 'Image format - jpg  png 
+                                                    jpeg 
+                                                    gif Image
+                                                    Size -
+                                                    maximum size 2 MB Image Ratio - 1:1',
+  'Image format - jpg, png,
+                                                jpeg, gif Image Size - maximum size 2 MB Image Ratio - 1:1' => 'Image format - jpg  png 
+                                                jpeg  gif Image Size - maximum size 2 MB Image Ratio - 1:1',
 );

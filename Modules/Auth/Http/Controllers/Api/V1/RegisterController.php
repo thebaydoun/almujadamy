@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Modules\ProviderManagement\Entities\Provider;
 use Modules\UserManagement\Entities\Serviceman;
 use Modules\UserManagement\Entities\User;
+use Modules\UserManagement\Entities\UserBoat;
 
 class RegisterController extends Controller
 {
@@ -18,13 +19,15 @@ class RegisterController extends Controller
     protected User $owner;
     protected User $user;
     protected Serviceman $serviceman;
+    protected UserBoat $userboat;
 
-    public function __construct(Provider $provider, User $owner, User $user, Serviceman $serviceman)
+    public function __construct(Provider $provider, User $owner, User $user, Serviceman $serviceman,UserBoat $userboat)
     {
         $this->provider = $provider;
         $this->owner = $owner;
         $this->user = $user;
         $this->serviceman = $serviceman;
+        $this->userboat = $userboat;
     }
 
     /**
@@ -82,6 +85,12 @@ class RegisterController extends Controller
 
         $user->referred_by = $userWhoRerreded->id ?? null;
         $user->save();
+
+        $userboat = $this->userboat;
+        $userboat->user_id = $user->user_id;
+        $userboat->boat_name = $request->boat_name;
+        $userboat->boat_number = $request->boat_number;
+        $userboat->save();
 
         return response()->json(response_formatter(REGISTRATION_200), 200);
     }
