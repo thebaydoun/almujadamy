@@ -3381,18 +3381,23 @@ body.aside-folded .aside .user-profile .media-body {
 body.aside-folded .aside-body .nav-category {
     visibility: hidden;
     max-height: 42px;
+    display: none;
+}
+body.aside-folded.open-aside-folded .aside-body .nav-category {
+    display: block;
 }
 
 body.aside-folded .aside-body .nav-category:before {
     position: absolute;
     content: "";
-    width: 0.3125rem;
-    height: 0.125rem;
+    /* width: 0.3125rem; */
+    /* height: 0.125rem; */
     inset-inline-start: 0;
     inset-block-start: 50%;
     transform: translateY(-50%);
     background-color: var(--dark-color);
     visibility: visible;
+    /* display: none; */
 }
 
 body.aside-folded .aside-body li .material-icons {

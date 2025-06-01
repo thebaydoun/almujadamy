@@ -2,7 +2,7 @@
 @php
     $site_direction = session()->get('landing_site_direction');
 @endphp
-<html lang="en" dir="{{$site_direction}}">
+<html lang="en" dir="{{ $site_direction }}" class="{{ $site_direction == 'rtl' ? 'rtl-class' : '' }}">
 
 <head>
     <meta charset="UTF-8"/>
@@ -250,7 +250,7 @@
                         <a href="Tel:{{bs_data($settings,'business_phone', 1)}}">{{bs_data($settings,'business_phone', 1)}}</a>
                     </div>
                 </div>
-                <div class="footer__wrapper-widget">
+                <div class="footer__wrapper-widget d-none">
                     <div class="footer__wrapper-contact">
                         <img class="icon" src="{{asset('public/assets/landing/img/cta-icon.png')}}" alt="{{translate('footer')}}">
                         <h6>

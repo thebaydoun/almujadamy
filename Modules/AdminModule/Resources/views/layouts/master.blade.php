@@ -46,15 +46,33 @@
 </script>
 
 <script>
-    // Add a class to the body before printing
-    window.addEventListener('beforeprint', () => {
-      document.body.classList.add('aside-folded');
-    });
+window.addEventListener('beforeprint', () => {
+  // Hide aside elements
+  const asideElements = document.querySelectorAll('aside.aside');
+  asideElements.forEach((aside) => {
+    aside.style.display = 'none';
+  });
 
-    // Remove the class from the body after printing
-    window.addEventListener('afterprint', () => {
-      document.body.classList.remove('aside-folded');
-    });
+  // Remove padding from .main-area
+  const mainArea = document.querySelector('.main-area');
+  if (mainArea) {
+    mainArea.style.paddingInlineStart = '0';
+  }
+});
+
+window.addEventListener('afterprint', () => {
+  // Restore aside elements
+  const asideElements = document.querySelectorAll('aside.aside');
+  asideElements.forEach((aside) => {
+    aside.style.display = '';
+  });
+
+  // Restore padding to .main-area
+  const mainArea = document.querySelector('.main-area');
+  if (mainArea) {
+    mainArea.style.paddingInlineStart = '';
+  }
+});
   </script>
 
 <div class="offcanvas-overlay"></div>

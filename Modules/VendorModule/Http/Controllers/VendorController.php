@@ -214,7 +214,6 @@ class VendorController extends Controller
         $category = $this->category->ofType('main')->where('id', $id)->first();
         if (isset($category)) {
             file_remover('category/', $category->image);
-            $category->zones()->sync([]);
             $category->translations()->delete();
             $category->delete();
             Toastr::success(translate(CATEGORY_DESTROY_200['message']));

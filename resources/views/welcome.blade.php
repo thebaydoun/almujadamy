@@ -264,7 +264,7 @@
             </div>
         </div>
     </section>
-    <section class="cta-section py-25">
+    <section class="cta-section py-25 d-none">
         <div class="container">
             <div class="cta-main">
                 <div class="cta-wrapper bg__img" data-img="{{asset('public/assets/landing')}}/img/cta-bg.png">

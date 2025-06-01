@@ -3734,18 +3734,21 @@ _Message' => 'Customer notification for provider bid offer
                                                     jpeg, gif Image Size - maximum size 2 MB Image Ratio - 3:1' => 'Image format - jpg  png 
                                                     jpeg  gif Image Size - maximum size 2 MB Image Ratio - 3:1',
   'product_information' => 'Product information',
-  'payment status updated successfully' => 'Payment status updated successfully',
+  'PDF' => 'PDF',
+  'image_format_-_jpg,_png,_jpeg,_gif_image
+                                                size_-_
+                                                maximum_size_2_MB_Image_Ratio_-_1:1' => 'Image format - jpg  png  jpeg  gif image
+                                                size - 
+                                                maximum size 2 MB Image Ratio - 1:1',
+  'Total_Vendors' => 'Total Vendors',
+  'vendor_name' => 'Vendor name',
   'Image format - jpg, png,
-                                                    jpeg,
-                                                    gif Image
-                                                    Size -
-                                                    maximum size 2 MB Image Ratio - 1:1' => 'Image format - jpg  png 
-                                                    jpeg 
-                                                    gif Image
-                                                    Size -
-                                                    maximum size 2 MB Image Ratio - 1:1',
-  'Image format - jpg, png,
-                                                jpeg, gif Image Size - maximum size 2 MB Image Ratio - 1:1' => 'Image format - jpg  png 
-                                                jpeg  gif Image Size - maximum size 2 MB Image Ratio - 1:1',
-  'referral code is invalid' => 'Referral code is invalid',
+                                                                    jpeg, gif Image Size - maximum size 2 MB Image Ratio -
+                                                                    1:1' => 'Image format - jpg  png 
+                                                                    jpeg  gif Image Size - maximum size 2 MB Image Ratio -
+                                                                    1:1',
+  'successfully registered. Thanks for joining us! Your registration is under review. Hang tight, we will notify you once approved!' => 'Successfully registered. Thanks for joining us! Your registration is under review. Hang tight  we will notify you once approved!',
+  'default_description_is_required' => 'Default description is required',
+  'default_title_is_required' => 'Default title is required',
+  'default_sub_title_is_required' => 'Default sub title is required',
 );

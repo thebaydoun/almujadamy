@@ -13,7 +13,15 @@ $pending_booking_count = \Modules\BookingModule\Entities\Booking::where('booking
         });
     })
     ->count();
-    $userPermissions = json_decode(auth()->user()->permissions, true) ?? [];
+    $userPermissions = auth()->user()->permissions;
+
+    // Check if it's a JSON string
+    if (is_string($userPermissions)) {
+        $userPermissions = json_decode($userPermissions, true) ?? [];
+    } elseif (!is_array($userPermissions)) {
+        // Default to an empty array if it's not an array or a JSON string
+        $userPermissions = [];
+    }
 
 $offline_booking_count = \Modules\BookingModule\Entities\Booking::whereIn('booking_status', ['pending', 'accepted'])
     ->where('payment_method', 'offline_payment')->where('is_paid', 0)->count();
@@ -420,6 +428,14 @@ $logo = business_config('business_logo', 'business_information');
                        class="{{request()->is('admin/business-settings/get-pages-setup')?'active-menu':''}}">
                         <span class="material-icons" title="Page Settings">article</span>
                         <span class="link-title">{{translate('page_settings')}}</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="{{route('admin.business-settings.get-landing-information', ['web_page' => 'text_setup'])}}"
+                       class="{{request()->is('admin/business-settings/get-landing-information')?'active-menu':''}}">
+                        <span class="material-icons" title="Business Settings">rocket_launch</span>
+                        <span class="link-title">{{translate('landing_page_settings')}}</span>
                     </a>
                 </li>
             @endif

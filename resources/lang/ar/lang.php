@@ -3588,16 +3588,11 @@
   'Image format - jpg, png,
                                                                     jpeg, gif Image Size - maximum size 2 MB Image Ratio -
                                                                     1:1' => 'تنسيق الصورة - jpg، png، jpeg، gif حجم الصورة - الحد الأقصى للحجم 2 ميجابايت نسبة الصورة - 1:1',
-  'Image format - jpg, png,
-                                                    jpeg,
-                                                    gif Image
-                                                    Size -
-                                                    maximum size 2 MB Image Ratio - 1:1' => 'Image format - jpg  png 
-                                                    jpeg 
-                                                    gif Image
-                                                    Size -
-                                                    maximum size 2 MB Image Ratio - 1:1',
-  'Image format - jpg, png,
-                                                jpeg, gif Image Size - maximum size 2 MB Image Ratio - 1:1' => 'Image format - jpg  png 
-                                                jpeg  gif Image Size - maximum size 2 MB Image Ratio - 1:1',
+'image_format_-_jpg,_png,_jpeg,_gif_image
+                                                size_-_
+                                                maximum_size_2_MB_Image_Ratio_-_1:1' => 'تنسيق الصورة - jpg  png  jpeg  gif
+                                                الحجم - 
+                                                الحد الأقصى للحجم 2 ميجابايت نسبة الأبعاد - 1:1',
+  'Total_Vendors' => 'إجمالي البائعين',
+  'vendor_name' => 'اسم البائع',
 );

@@ -144,7 +144,7 @@
                         </ul>
 
                         <div class="d-flex gap-2 fw-medium">
-                            <span class="opacity-75">{{translate('Total_Categories')}}:</span>
+                            <span class="opacity-75">{{translate('Total_Vendors')}}:</span>
                             <span class="title-color">{{$categories->total()}}</span>
                         </div>
                     </div>
@@ -191,7 +191,7 @@
                                             <thead class="align-middle">
                                             <tr>
                                                 <th>{{translate('SL')}}</th>
-                                                <th>{{translate('category_name')}}</th>
+                                                <th>{{translate('vendor_name')}}</th>
                                                 <th>{{translate('phone')}}</th>
                                                 <th>{{translate('status')}}</th>
                                                 <th>{{translate('action')}}</th>

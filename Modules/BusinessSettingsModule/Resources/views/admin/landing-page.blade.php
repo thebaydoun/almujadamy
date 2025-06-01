@@ -766,7 +766,7 @@
                                                             <div class="table-actions">
                                                                 <button type="button"
                                                                         data-id="delete-{{$item['id']}}"
-                                                                        class="table-actions_delete bg-transparent border-0 p-0">
+                                                                        class="table-actions_delete bg-transparent border-0 p-0 delete-button">
                                                                     <span class="material-icons">delete</span>
                                                                 </button>
                                                                 <form
@@ -984,7 +984,7 @@
                                                             <div class="table-actions">
                                                                 <button type="button"
                                                                         data-id="delete-{{$item['id']}}"
-                                                                        class="table-actions_delete bg-transparent border-0 p-0">
+                                                                        class="table-actions_delete bg-transparent border-0 p-0 delete-button">
                                                                     <span class="material-icons">delete</span>
                                                                 </button>
                                                                 <form
@@ -1185,7 +1185,7 @@
                                                             <div class="table-actions">
                                                                 <button type="button"
                                                                         data-id="delete-{{$item['id']}}"
-                                                                        class="table-actions_delete bg-transparent border-0 p-0">
+                                                                        class="table-actions_delete bg-transparent border-0 p-0 delete-button">
                                                                     <span class="material-icons">delete</span>
                                                                 </button>
                                                                 <form
@@ -2265,4 +2265,17 @@
             $("." + lang + "-form").removeClass('d-none');
         });
     </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".delete-button").forEach(button => {
+            button.addEventListener("click", function () {
+                let formId = this.getAttribute("data-id"); // جلب ID للفورم المرتبط
+                let form = document.getElementById(formId);
+                if (confirm("هل أنت متأكد من أنك تريد حذف هذا العنصر؟")) {
+                    form.submit(); // إرسال الفورم للحذف
+                }
+            });
+        });
+    });
+</script>
 @endpush

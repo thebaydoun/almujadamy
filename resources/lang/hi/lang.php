@@ -3573,4 +3573,5 @@ _Message' => 'Customer notification for provider bid offer
   'Thanks for using our service' => 'Thanks for using our service',
   'Terms & Conditions' => 'Terms & Conditions',
   'Change of mind is not applicable as a reason for refund' => 'Change of mind is not applicable as a reason for refund',
+  'successfully data fetched' => 'Successfully data fetched',
 );
